@@ -98,6 +98,12 @@ https://www.loxone.com/dede/kb/audio-player/
 
 Quelle: https://www.loxone.com/dede/kb/audio-player/
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| AQFav | `OutZoneFav` | Ausgang | Favorite | Aktueller Favorit | – |
+| V- | `OutVolDownExternal` | Ausgang | Pulse on Volume- | Die Funktion ist nur aktiviert, wenn Stereoausgänge mit extern gesteuertem "Lautstärke-Modus" angeschlossen sind. | – |
+
 ---
 
 ### Audio Player Gruppe fix
@@ -327,6 +333,15 @@ https://www.loxone.com/dede/kb/music-server-zone/
 - **Zonennamen-Änderung:** "Wird eine Zone umbenannt, wird diese Änderung für Air Play und sonstige Dienste spätestens nach einem Reboot des Music Servers übernommen."
 
 Quelle: https://www.loxone.com/dede/kb/music-server-zone/
+
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Power | `SvPower` | Eingang | Server On/Off | Standby- bzw. WakeOnLAN-Befehl versenden | – |
+| V- | `VolMinus` | Eingang | Volume | Trigger Leiser Doppelklick schaltet die Zone aus | – |
+| Song- | `PrevSong` | Eingang | Previous track | Trigger vorheriger Song | – |
+| AIp | `Progress` | Eingang | Position | Analoger Eingang Position im Song | ∞ |
+| Vtmin | `TTSVol` | Parameter | TTS minimum volume | Mindestlautstärke der Sprachausgabe. Um die Sprachausgabe immer deutlich hören zu können, wird diese immer mindestens mit der aktuellen Lautstärke abgespielt. Also bei Bedarf auch lauter als Vtts. | 0…100 |
 
 ---
 

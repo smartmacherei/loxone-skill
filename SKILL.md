@@ -141,10 +141,17 @@ statt Attributen. Ein Scanner, der nur Attribute kennt, bricht dort ab.
 | [references/miniserver-dateizugriff.md](references/miniserver-dateizugriff.md) | **Programm im Miniserver lesen und schreiben** — HTTP kann nur lesen, FTP schreibt; LoxCC-Format samt CRC32; **Upload wie Config: `/prog/sps_new.zip` + `dev/sps/restart`** (verifiziert); was der WebSocket pusht und was nicht; **Klemmen per Logger-UDP in Echtzeit melden** (`OutputRefLM`, Skript `scripts/ha_udp_logger.py`) |
 | [references/techdoc-lxres.md](references/techdoc-lxres.md) | **Offizielle Bausteindoku als XML aus dem Config-Paket** — 220 typisierte Bausteine mit XML-Konnektorname, Doku-Kürzel, Einheit, Bereich, Vorgabe; Decoder `scripts/decode_lxres.py`, Abgleich `scripts/techdoc_abgleich.py` → [techdoc-abgleich.md](references/techdoc-abgleich.md); kommt mit jedem Config-Update mit |
 
-### Baustein-Katalog — alle 179 Bausteine der offiziellen KB
+### Baustein-Katalog — alle 179 Bausteine der offiziellen KB + 20 aus der TechDoc
 
 Je Baustein: Eingänge, Ausgänge, Parameter, Eigenschaften wörtlich, dazu dokumentierte
 Fallstricke und Quell-URL. Quelle: `loxone.com/dede/kb-cat/config-functionblock/`, Stand 30.07.2026.
+**Seit 05.09.2026 ergänzt aus der TechDoc** ([techdoc-lxres.md](references/techdoc-lxres.md)):
+20 Bausteine ohne KB-Seite (Gen-1-Varianten, BETA-Bausteine, Vergleicher, Stufenauswahl …) als
+eigene Abschnitte `### Name (\`LxType\`)` am Ende der passenden Datei, 34 vorhandene Seiten um
+die Tabelle **„Weitere Konnektoren laut TechDoc"** (Standard-Kürzel wie `Off`, `Rem`, `Rw`, die
+die KB-Seiten weglassen) und eine Tabelle der 26 Geräte-/Extension-Einträge ohne Konnektoren.
+Erzeugt und aktualisiert mit `py -3 scripts/techdoc_katalog.py <sys_DEU.zip> --apply`, geprüft mit
+`scripts/techdoc_abgleich.py` — nach jedem Config-Update beide laufen lassen.
 
 | Datei | Bausteine | Schwerpunkt |
 |---|---|---|
@@ -162,6 +169,7 @@ Fallstricke und Quell-URL. Quelle: `loxone.com/dede/kb-cat/config-functionblock/
 | [bausteine-lueftung-klimaanlage.md](references/bausteine-lueftung-klimaanlage.md) | 9 | Raum-/WC-Lüftung, Fan Coil, Klimaanlage, Leaf/Internorm |
 | [bausteine-tore-tueren-spezial.md](references/bausteine-tore-tueren-spezial.md) | 9 | Türsteuerung, Tor, Bewässerung, Pool, Sauna, Wecker |
 | [bausteine-beleuchtung.md](references/bausteine-beleuchtung.md) | 8 | Lichtsteuerung, Dimmer, RGB-Lichtszene, Konstantlicht, Szene |
+| [bausteine-geraete-erweiterungen.md](references/bausteine-geraete-erweiterungen.md) | 26 | **TechDoc:** Miniserver, Extensions (DI/AI/AO/Dimmer/KNX/EnOcean/1-Wire/RS232/RS485/DMX/M-Bus/Schüco), Audioserver, Datenbank, Wetterserver, Tracker, Notiz — nur Name, Beschreibung, KB-Link |
 
 ### Praxis
 

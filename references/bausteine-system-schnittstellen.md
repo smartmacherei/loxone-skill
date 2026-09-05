@@ -149,6 +149,13 @@ Ermöglicht die Realisierung komplexer Funktionen und Abläufe in der Scriptspra
 
 Quelle: https://www.loxone.com/dede/kb/script-programming/
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| AI | `AI` | Eingang | – | Analoger Eingang des Programms | ∞ |
+| AQ | `AQ` | Ausgang | – | Analoger Ausgang des Programms | ∞ |
+| TeQ | `TeQ` | Ausgang | – | Fehlertext Ausgang des Programms | – |
+
 ---
 
 ## Ping

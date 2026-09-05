@@ -517,6 +517,11 @@ Keine dokumentiert
 
 Quelle: https://www.loxone.com/dede/kb/monoflop/
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Off | `Reset` | Eingang | Off / Lock | Impuls(< 1 s): Ausgänge werden zurückgesetzt / ausgeschaltet. Konstant 1 (> 1 s): Baustein ist gesperrt. Dominierender Eingang. | – |
+
 ---
 
 ### Schieberegister
@@ -623,6 +628,11 @@ Quelle: https://www.loxone.com/dede/kb/virtueller-status/
 Keine dokumentiert
 
 Quelle: https://www.loxone.com/dede/kb/virtueller-status/
+
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| AQ | `AQ` | Ausgang | – | AQ | ∞ |
 
 ---
 
@@ -780,3 +790,131 @@ Quelle: https://www.loxone.com/dede/kb/binaerkodierer/
 - Viele Bausteine haben unvollständige oder fehlende Tabellen in der offiziellen KB
 - Kürzel wurden wörtlich übernom men (z.B. ϑ für Temperatur, wenn vorhanden)
 - [OFFEN]-Markierungen bezeichnen Informationen, die in der offiziellen KB nicht dokumentiert sind
+
+---
+
+## Aus der TechDoc ergänzt
+
+Stand 05.09.2026, Loxone Config 17.1.6.30. Diese Bausteine haben keine eigene Seite in der KB-Kategorie „Funktionsbausteine"; Ein-/Ausgänge und Parameter stammen aus der maschinenlesbaren Bausteindoku des Config-Pakets ([techdoc-lxres.md](techdoc-lxres.md)), Kennzeichnung `[BELEGT-TECHDOC]`. Eigenschaften und Fallstricke kennt die TechDoc nicht. Erzeugt von `scripts/techdoc_katalog.py` — nicht von Hand bearbeiten, sondern das Skript nach einem Config-Update erneut laufen lassen.
+
+### RS Selbsthalteschalter (`FlipFlop`)
+
+Flipflop mit Set- und Reset-Eingang. Reset ist dominant. Achtung: Dieser Baustein wird nur zur Abwärtskompatibilität bereitgestellt. Bitte verwenden Sie stattdessen den Block Monoflop.
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| S | `InputS` | Set | Setzen Eingang | – |
+| R | `InputR` | Reset | Rücksetzen Eingang | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Q | `Q` | – | Ausgang | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Rem | `Remanence` | Remanence input | Remanenzeingang: Wenn aktiv, behält der Baustein seinen letzten Zustand nach einem Miniserver-Neustart. Der Zustand des Bausteins wird gespeichert: – Beim Speichern in den Miniserver – Bei einem geplanten Neustart – Vor einem Backup – Einmal pro Stunde Die Daten werden auf der SD gespeichert. | – | – |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 335 · KB: https://www.loxone.com/help/FlipFlop
+
+---
+
+### Größer (`Greater`)
+
+Vergleicht 2 analoge Eingänge, prüft auf größer
+
+**Eingänge** [BELEGT-TECHDOC]
+[nicht vorhanden]
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| G | `Q` | 1 when (V1) > (V2) | 1 wenn(V1) > (V2) | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| V1-n | `Inputn` | Value 1-n | Wert 1-n | ∞ | 0 |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 432 · KB: https://www.loxone.com/help/Greater
+
+---
+
+### Kleiner (`Less`)
+
+Vergleicht 2 analoge Eingänge, prüft auf kleiner
+
+**Eingänge** [BELEGT-TECHDOC]
+[nicht vorhanden]
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| L | `Q` | 1 when (V1) < (V2) | 1 wenn (V1) < (V2) | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| V1-n | `Inputn` | Value 1-n | Wert 1-n | ∞ | 0 |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 434 · KB: https://www.loxone.com/help/Less
+
+---
+
+### Stufenauswahl (`StepSel`)
+
+Bis zu 16 auswählbare Stufen, es kann jeweils nur ein Ausgang aktiv sein. Beispiel: Ein Impuls am Eingang (I3) aktiviert (O3). Wird der Baustein mit Fan Control Tree (www.loxone.com/help/fan-control-tree) verwendet, stehen bis zu 4 Stufen sowie Aus zur Verfügung.
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| I1-n | `InputTrigger n` | Input 1-16 | Schaltet den jeweiligen Ausgang 1-n auf Ein. | – |
+| + | `InputTriggerP` | Next output | Nächster Ausgang | – |
+| - | `InputTriggerM` | Previous output | Vorheriger Ausgang | – |
+| Sel | `InputSel` | Select output | Schaltet auf einen bestimmten Ausgang. | 0…16 |
+| Off | `Reset` | Off / Lock | Impuls (< 1 s): Ausgänge werden zurückgesetzt / ausgeschaltet. Konstant 1 (> 1 s): Baustein ist gesperrt. Dominierender Eingang. Der Name des angeschlossenen Sensors wird in der Visualisierung verwendet. | – |
+| DisPc | `InputDisable` | Disable periphery control | Deaktiviert alle Eingänge wenn Ein. (z.B. Kindersicherung, Reinigung) Bedienung über die Visualisierung weiterhin möglich. | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| O1-n | `Qn` | Output 1-n | Ausgang 1-n | – |
+| N | `AQ` | Number of active output | Nummer des aktiven Ausgangs | 0…16 |
+| API | `OutputAPI` | API Connector | Intelligenter API basierter Verbinder. Kann verschiedene Funktionen zwischen Geräten und Bausteinen verknüpfen. API Commands (http://updatefiles.loxone.com/KnowledgeBase/Online/Common/Documents/API_Commands.pdf) | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Rem | `Remanence` | Remanence input | Remanenzeingang: Wenn aktiv, behält der Baustein seinen letzten Zustand nach einem Miniserver-Neustart. Der Zustand des Bausteins wird gespeichert: – Beim Speichern in den Miniserver – Bei einem geplanten Neustart – Vor einem Backup – Einmal pro Stunde Die Daten werden auf der SD gespeichert. | – | – |
+| Max | `Max` | Max. outputs | Maximale Anzahl der wählbaren Ausgänge. Beispiel: Max=4 -> nur die Ausgänge 1-4 können über Bausteineingänge aktiviert werden. In der Visualisierung können unabhängig von dieser Einstellung alle beschrifteten Ausgänge aktiviert werden. | 1…16 | 4 |
+| Sk0 | `Mode` | Skip 0 | 'Alles-Aus' (0) wird beim Durchschalten mit +/- übersprungen, wenn Ein. Gilt nur für Objekteingänge, nicht für die Tasten in der Visualisierung. | – | – |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 538 · KB: https://www.loxone.com/help/step-selector
+
+---

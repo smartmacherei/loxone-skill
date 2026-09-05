@@ -168,6 +168,13 @@ Quelle: https://www.loxone.com/dede/kb/klima-controller/
 **Fallstricke:** [BELEGT]
 - Keine dokumentierten Warnhinweise.
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| ϑt | `TempAvg` | Eingang | Temperature Threshold | Analoger Eingang Temperaturschwelle Im Modus "Automatisch mit Temperaturschwelle" wird dieser Wert für die Erlaubnis von Heiz/Kühlmodus verwendet Ist dieser Eingang nicht verbunden, verwendet der Baustein die durchschnittliche Aussentemperatur der letzen 48h | ∞ ° |
+| Ie | `Error` | Eingang | Error | Fehlereingang | ∞ |
+| Is | `ServiceMode` | Eingang | Service Mode | Service-Modus | ∞ |
+
 ---
 
 ### 3. HVAC Controller
@@ -234,6 +241,12 @@ Quelle: https://www.loxone.com/dede/kb/hvac-controller/
 
 **Fallstricke:** [BELEGT]
 - Der HVAC Controller ist in erster Linie für nordamerikanische HVAC-Systeme konzipiert. Er ist jedoch nicht auf diesen Anwendungsbereich beschränkt und kann je nach Projektanforderungen auch mit einer Vielzahl anderer Systemtypen eingesetzt werden.
+
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| W/W1 | `OutHeat1` | Ausgang | 1st stage heating | Heizstufe 1. Variiert je nach gewähltem Heizungstyp. Für "Öl/Gas/Elektrisch": aktiv für die erste Heizstufe, aktiv für die zweite Heizstufe. Für "Wärmepumpe mit fossiler Zusatzheizung": aktiv für die zweite Heizstufe. Für "Wärmepumpe mit elektrischer Zusatzheizung": aktiv für die zweite Heizstufe. | – |
+| O/B | `OutValve` | Ausgang | Reversing valve | Ändert die Wirkrichtung der Wärmepumpe. Ist (DirV) deaktiviert: Aus für Heizen, Ein für Kühlen. Ist (DirV) aktiviert: EIN für Heizen, AUS für Kühlen. | – |
 
 ---
 
@@ -428,6 +441,11 @@ Quelle: https://www.loxone.com/dede/kb/taupunktrechner/
 **Fallstricke:** [BELEGT]
 - Keine dokumentierten Warnhinweise.
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Bp | `Baro` | Eingang | Barometric Pressure | Aktueller barometrischer Druck | ∞ hPa |
+
 ---
 
 ### 8. Solarregelung
@@ -483,6 +501,14 @@ Quelle: https://www.loxone.com/dede/kb/solarregelung/
 
 **Fallstricke:** [BELEGT]
 - Keine dokumentierten Warnhinweise.
+
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Am | `AIm` | Eingang | Operating mode | Auswahl des zu verwendenden Betriebsmodus. (0 = Automatikbetrieb: Im Kalender steht „Heizperiode“ zur Verfügung (Diese Einstellungen (Datum) entscheiden, ob der Winterbetriebsmodus aktiviert wird) , 1 = manueller Sommerbetrieb , 2 = manueller Winterbetrieb) Im Winterbetriebsmodus wird die Priorität der Beladung der beiden ersten Speicher vertauscht. | ∞ |
+| Qs | `Qs` | Ausgang | – | Status Startmodus. Ein, wenn die Pumpe durch die Startfunktion aktiviert wurde. | – |
+| Tf | `IT` | Parameter | Circulation duration | Spüldauer im Startmodus (Zeit, die die Flüssigkeit benötigt, um vom Kollektor zum Sensor zu gelangen). | ∞ s |
+| Ts | `ST` | Parameter | Circulation interval for start mode | Durchspülintervall im Startmodus. | ∞ s |
 
 ---
 
@@ -682,3 +708,180 @@ Quelle: https://www.loxone.com/dede/kb/pid-regler/
 - Defaultwerte und Wertebereiche vollständig
 - Fallstricke/Warnhinweise dokumentiert
 - Quelle (URL) bei jedem Baustein angegeben
+
+---
+
+## Aus der TechDoc ergänzt
+
+Stand 05.09.2026, Loxone Config 17.1.6.30. Diese Bausteine haben keine eigene Seite in der KB-Kategorie „Funktionsbausteine"; Ein-/Ausgänge und Parameter stammen aus der maschinenlesbaren Bausteindoku des Config-Pakets ([techdoc-lxres.md](techdoc-lxres.md)), Kennzeichnung `[BELEGT-TECHDOC]`. Eigenschaften und Fallstricke kennt die TechDoc nicht. Erzeugt von `scripts/techdoc_katalog.py` — nicht von Hand bearbeiten, sondern das Skript nach einem Config-Update erneut laufen lassen.
+
+### Zentralheizung (BETA) (`HeatCentral`)
+
+Zentralheizung
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| AIk1 | `IK1` | Boiler Temperature 1 | Analoger Eingang für die aktuelle Kesseltemperatur 1 [°] | ∞ |
+| AIk2 | `IK2` | Boiler Temperature 2 | Analoger Eingang für die aktuelle Kesseltemperatur 2 [°] | ∞ |
+| Tb | `SB` | Boiler target temperature | Analoger Eingang für die gewünschte Boilertemperatur [°] | ∞ |
+| AIb | `IB` | Boiler temperature | Analoger Eingang für die aktuelle Boilertemperatur [°] | ∞ |
+| Tp1 | `SP1` | Target Temperature Buffer 1 | Analoger Eingang für die gewünschte Puffertemperatur 1 [°] | ∞ |
+| Tp2 | `SP2` | Target Temperature Buffer 2 | Analoger Eingang für die gewünschte Puffertemperatur 2 [°] | ∞ |
+| Tp3 | `SP3` | Target Temperature Buffer 3 | Analoger Eingang für die gewünschte Puffertemperatur 3 [°] | ∞ |
+| Tp4 | `SP4` | Target Temperature Buffer 4 | Analoger Eingang für die gewünschte Puffertemperatur 4 [°] | ∞ |
+| AIb1 | `IP1` | Temperature Buffer 1 | Analoger Eingang für die aktuelle Puffertemperatur 1 [°] | ∞ |
+| AIb2 | `IP2` | Temperature Buffer 2 | Analoger Eingang für die aktuelle Puffertemperatur 2 [°] | ∞ |
+| AIb3 | `IP3` | Temperature Buffer 3 | Analoger Eingang für die aktuelle Puffertemperatur 3 [°] | ∞ |
+| AIb4 | `IP4` | Temperature Buffer 4 | Analoger Eingang für die aktuelle Puffertemperatur 4 [°] | ∞ |
+| TVl1 | `SV1` | Target Flow Temperature 1 | Analoger Eingang für die gewünschte Vorlauftemperatur 1 [°] | ∞ |
+| TVl2 | `SV2` | Target Flow Temperature 2 | Analoger Eingang für die gewünschte Vorlauftemperatur 2 [°] | ∞ |
+| TVl3 | `SV3` | Target Flow Temperature 3 | Analoger Eingang für die gewünschte Vorlauftemperatur 3 [°] | ∞ |
+| TVl4 | `SV4` | Target Flow Temperature 4 | Analoger Eingang für die gewünschte Vorlauftemperatur 4 [°] | ∞ |
+| AIv1 | `IV1` | Current Flow Temperature 1 | Analoger Eingang für die aktuelle Vorlauftemperatur 1 [°] | ∞ |
+| AIv2 | `IV2` | Current Flow Temperature 2 | Analoger Eingang für die aktuelle Vorlauftemperatur 2 [°] | ∞ |
+| AIv3 | `IV3` | Current Flow Temperature 3 | Analoger Eingang für die aktuelle Vorlauftemperatur 3 [°] | ∞ |
+| AIv4 | `IV4` | Current Flow Temperature 4 | Analoger Eingang für die aktuelle Vorlauftemperatur 4 [°] | ∞ |
+| AIe | `IE` | Error Signal Input | Analoger Eingang für Störmeldungen | ∞ |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Qh1 | `Qh1` | – | Anforderung Heizkreis 1 | – |
+| Qh2 | `Qh2` | – | Anforderung Heizkreis 2 | – |
+| Qh3 | `Qh3` | – | Anforderung Heizkreis 3 | – |
+| Qh4 | `Qh4` | – | Anforderung Heizkreis 4 | – |
+| AQb | `AQb` | – | Solltemperatur Boiler | ∞ |
+| AQb1 | `AQp1` | – | Solltemperatur Pufferspeicher 1 | ∞ |
+| AQb2 | `AQp2` | – | Solltemperatur Pufferspeicher 2 | ∞ |
+| AQb3 | `AQp3` | – | Solltemperatur Pufferspeicher 3 | ∞ |
+| AQb4 | `AQp4` | – | Solltemperatur Pufferspeicher 4 | ∞ |
+| AQv1 | `AQv1` | – | Solltemperatur Vorlauf 1 | ∞ |
+| AQv2 | `AQv2` | – | Solltemperatur Vorlauf 2 | ∞ |
+| AQv3 | `AQv3` | – | Solltemperatur Vorlauf 3 | ∞ |
+| AQv4 | `AQv4` | – | Solltemperatur Vorlauf 4 | ∞ |
+| Rh1 | `RH1` | Preheat return with residual heat from boiler 1 | Aktiviert den Mischer für die Rücklaufanhebung zur Restwärmenutzung von Heizkessel 1. | – |
+| Rh2 | `RH2` | Preheat return with residual heat from boiler 2 | Aktiviert den Mischer für die Rücklaufanhebung zur Restwärmenutzung von Heizkessel 2. | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Rem | `Remanence` | Remanence input | Remanenzeingang: Wenn aktiv, behält der Baustein seinen letzten Zustand nach einem Miniserver-Neustart. Der Zustand des Bausteins wird gespeichert: – Beim Speichern in den Miniserver – Bei einem geplanten Neustart – Vor einem Backup – Einmal pro Stunde Die Daten werden auf der SD gespeichert. | – | – |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 481
+
+---
+
+### Intelligente Raumregelung Gen 1 (`IRoomcontrol`)
+
+Intelligente Raumtemperaturregelung mit analogen oder digitalen Steuerausgängen
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Am | `AMode` | Mode | 0=Automatik: In den Betriebszeiten stehen „Heizperiode“ und „Kühlperiode“ zur Verfügung. Diese Einstellungen (Datum) entscheiden, ob der Heiz- oder Kühlbetrieb aktiviert wird. Gibt es dazwischen einen undefinierten Datumsbereich, sind alle Ausgänge deaktiviert. Diese Betriebszeiten gelten global für alle Intelligenten Raumregler in einem Projekt. 1=Automatik Heizbetrieb: Solltemperatur von Schaltuhr Heizen, Heizbereich 1 & 2 aktiv, Kühl- und Beschattungsausgang deaktiviert. 2=Automatik Kühlbetrieb: Solltemperatur von Schaltuhr Kühlen, Kühl- und Beschattungsausgang aktiv, Heizbereich 1 & 2 deaktiviert. 3=Manueller Heizbetrieb: Solltemperatur von Eingang T, Heizbereich 1 & 2 aktiv, Kühl- und Beschattungsausgang deaktiviert. 4=Manueller Kühlbetrieb: Solltemperatur von Eingang T, Kühl- und Beschattungsausgang aktiv, Heizbereich 1 & 2 deaktiviert. | ∞ |
+| As | `SMode` | Service mode | 0=Servicemode AUS. 1=Heizen und Kühlen AUS: AQ=0, Q=Aus, AQ2=0, Q2=Aus, AQc=0, Qc=Aus, Qs=Aus - Ventile voll geschlossen 2=Heizen EIN / Kühlen AUS: AQ=10, Q=Ein, AQ2=10, Q2=Ein, AQc=0, Qc=Aus, Qs=Aus 3=Heizen AUS / Kühlen EIN: AQ=0, Q=Aus, AQ2=0, Q2=Aus, AQc=10, Qc=Ein, Qs=Ein 4=Heizen und Kühlen EIN: AQ=10, Q=Ein, AQ2=10, Q2=Ein, AQc=10, Qc=Ein, Qs=Ein - Ventile voll geöffnet | ∞ |
+| T | `Input` | Target temperature | Analoger Eingang gewünschte Solltemperatur im manuellen Modus | ∞ |
+| AI | `Temp` | Temperature | Analoger Eingang aktuelle Raumtemperatur | ∞ |
+| Iw | `Window` | Window | Fensterkontakt (NUR bei Automatik Modi): AUS=Geschlossen, EIN=Offen → 'Haus im Tiefschlaf' bei Heizbetrieb / 'Hitzeschutztemperatur' bei Kühlbetrieb | – |
+| Ic | `Comfort` | Select Comfort Temperature | Auswahl Komforttemperatur Startet KOMFORTTEMPERATUR bei EIN (steigende Flanke) und aktiviert den Temperatur Timer mit der Laufzeit (Tsc) bei AUS (fallende Flanke). Nach Ablauf von Tsc läuft der eingestellte Autpilot-Modus weiter. | – |
+| Is | `Save` | Early exit (select economy temperature) | Eingang Vorzeitiges Verlassen (Auswahl Spartemperatur) Startet SPARTEMPERATUR bei EIN (steigende Flanke) und aktiviert den Temperatur Timer mit der Laufzeit (Tss) bei AUS (fallende Flanke). Nach Ablauf von Tss läuft der eingestellte Automatik-Modus weiter. Wenn Tss gleich 0 ist, dann bleibt die SPARTEMPERATUR bis zur nächsten Änderung in der Schaltuhr. | – |
+| Mo | `Move` | Motion Sensor - Extension of Comfort Temperature Entry | Bewegungsmeldereingang (Verlängerung Komforttemperatur-Zeitfenster) Startet KOMFORTTEMPERATUR bei EIN (steigende Flanke) und aktiviert den Temperatur Timer mit der Laufzeit (Tmv) bei AUS (fallende Flanke). Bei EIN (steigende Flanke) muss sich der Regler im Komforttemperatur-Zeitfenster befinden, ansonsten wird die Änderung ignoriert. Nach Ablauf von Tmv läuft der eingestellte Automatik-Modus weiter. | – |
+| R | `Reset` | Reset | Stoppt den Temperatur Timer. Der Temperatur Timer kann über Eingänge (Ic,Is,Mv) oder über die Visualisierung gestartet werden. Der Name des angeschlossenen Sensors wird in der Visualisierung verwendet. | – |
+| Dis | `InputDisable` | Disable | Dis sperrt T, Ic und Is | – |
+| DisMo | `DisMv` | Disable motion sensor input | Bewegungsmeldereingang Mv deaktivieren | – |
+| St | `Stop` | Stop | STOP Eingang Schaltet alle Ausgänge aus und deaktiviert die automatische Ventilbewegung (Tsm, Tcm) | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| AQ | `AQ` | – | Analoger Ausgang Heizen Bereich 1 (stetige Ventile 0-10V) | ∞ |
+| Q | `Q` | – | Digitaler Ausgang Heizen Bereich 1 (für EIN/Aus-Ventile) Die Periodendauer liegt dabei relativ niedrig. Aus diesem Grund ist dieser nicht für das direkte Schalten großer Lasten (z.B. Infrarotheizungen) mittels Relaiskontakten geeignet. | – |
+| AQ2 | `AQ2` | – | Analoger Ausgang Heizen Bereich 2 (stetige Ventile 0-10V) | ∞ |
+| Q2 | `Q2` | – | Digitaler Ausgang Heizen Bereich 2 (für EIN/Aus-Ventile) Die Periodendauer liegt dabei relativ niedrig. Aus diesem Grund ist dieser nicht für das direkte Schalten großer Lasten (z.B. Infrarotheizungen) mittels Relaiskontakten geeignet. | – |
+| AQc | `AQc` | – | Analoger Ausgang Kühlen Bereich 1 (stetige Ventile 0-10V) | ∞ |
+| Qc | `Qc` | – | Digitaler Ausgang Kühlen Bereich 1 (für EIN/Aus-Ventile) Die Periodendauer liegt dabei relativ niedrig. Aus diesem Grund ist dieser nicht für das direkte Schalten großer Lasten (z.B. Infrarotheizungen) mittels Relaiskontakten geeignet. | – |
+| AQc2 | `AQc2` | – | Analoger Ausgang Kühlen Bereich 2 (stetige Ventile 0-10V) | ∞ |
+| Qc2 | `Qc2` | – | Digitaler Ausgang Kühlen Bereich 2 (für EIN/Aus-Ventile) Die Periodendauer liegt dabei relativ niedrig. Aus diesem Grund ist dieser nicht für das direkte Schalten großer Lasten (z.B. Infrarotheizungen) mittels Relaiskontakten geeignet. | – |
+| Qs | `Qs` | – | Digitaler Ausgang für Beschattung - Dauerschaltung | – |
+| AQs | `AQs` | – | Analoger Ausgang aktueller Modus: 0 = Automatik 1 = Automatik Heizbetrieb, 2 = Automatik Kühlbetrieb 3 = Manueller Heizbetrieb, 4 = Manueller Kühlbetrieb | ∞ |
+| AQss | `AQss` | – | Analoger Ausgang aktueller Servicemodus: 0=Servicemode AUS, 1=Heizen und Kühlen AUS, 2=Heizen EIN / Kühlen AUS, 3=Heizen AUS / Kühlen EIN, 4=Heizen und Kühlen EIN | ∞ |
+| Qe | `Qe` | – | Fehler Ausgang - EIN solange der Fehler präsent ist | – |
+| TxQa | `Qa` | – | Textausgabe bei Fehler | – |
+| AQt | `AQt` | – | Analoger Ausgang aktuelle Zieltemperatur | ∞ |
+| AQhm | `AQhm` | – | Analoger Ausgang aktueller Modus Schaltuhr für Heizen | ∞ |
+| AQcm | `AQcm` | – | Analoger Ausgang aktueller Modus Schaltuhr für Kühlen | ∞ |
+| AQtr | `AQtr` | – | Analoger Ausgang für die Restzeit des Temperatur Timers in Sekunden. Der Temperatur Timer kann über Eingänge (Ic,Is,Mv) oder über die Visualisierung gestartet werden. | ∞ |
+| Qp | `Qp` | – | Digitaler Ausgang Aufheizphase oder Abkühlphase 0 = Aufheizphase bzw. Abkühlphase nicht aktiv 1 = Aufheizphase bzw. Abkühlphase aktiv | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Ts | `TSave` | Economy temperature | Spartemperatur in ° relativ zur Komforttemperatur Heizen: Komforttemperatur – Spartemperatur Kühlen: Komforttemperatur + Spartemperatur | ∞ | 3 |
+| Tch | `TComfort` | Comfort temperature heating | Absolute Komforttemperatur in ° bei Heizbetrieb | ∞ | 22,5 |
+| Tcc | `TComfortC` | Comfort temperature cooling | Absolute Komforttemperatur in ° bei Kühlbetrieb | ∞ | 23 |
+| Tp | `TParty` | Party temperature | Partytemperatur in ° relativ zur Komforttemperatur Heizen und Kühlen: Komforttemperatur – Partytemperatur | ∞ | 1 |
+| Th | `TMore` | Cozy temperature | Temperatur erhöhter Wäremebedarf in ° relativ zur Komforttemperatur Heizen und Kühlen: Komforttemperatur + Temperatur erhöhter Wäremebedarf | ∞ | 1 |
+| Td | `TDeepSleep` | Frost protection temperature | Absolute Haus im Tiefschlaf Temperatur in ° Für Langzeitabwesenheit als Frostschutz (Heizbetrieb) | ∞ | 5 |
+| Tm | `TMax` | Overheat protection temperature | Absolute Hitzeschutztemperatur in ° Maximale Temperatur in ° (Kühlbetrieb) | ∞ | 25,5 |
+| Tsm | `TimeMove` | Valve movement heating | Maximaler Ventilstillstand im Heizbetrieb (Tage). Wenn die Ventile so lange nicht bewegt wurden, werden sie automatisch bewegt. Wählen Sie die Zeit laut Herstellerangaben. | ∞ | 14 |
+| Tcm | `TimeMoveC` | Valve movement cooling | Maximaler Ventilstillstand im Kühlbetrieb (Tage). Wenn die Ventile so lange nicht bewegt wurden, werden sie automatisch bewegt. Wählen Sie die Zeit laut Herstellerangaben. | ∞ | 14 |
+| Tsc | `TimeC` | Comfort timer | Laufzeit Komforttemperatur Timer in Sekunden - bei AUS (fallende Flanke) am Eingang Ic wird die Komforttemperatur noch solange weiter forciert | ∞ | 1800 |
+| Tss | `TimeS` | Economy timer | Laufzeit Spartemperatur Timer in Sekunden - bei AUS (fallende Flanke) am Eingang Is wird die Spartemperatur noch solange weiter forciert | ∞ | 1800 |
+| Tmv | `TimeMv` | Extension of Comfort Temperature Entry | Verlängerung des Komforttemperatur-Zeitfensters in Sekunden - bei AUS (fallende Flanke) am Eingang Mv wird die Komforttemperatur noch solange weiter forciert | ∞ | 1800 |
+| Ths | `THCelvin` | Heating up speed | Zeitdauer [min] die benötigt wird, um die Raumtemperatur um 1° zu erhöhen. Ein Wert > 0 überschreibt den vom intelligenten Raumregler gelernten Wert. Falls der Wert 0 ist, wird der vom Raumregler gelernte Wert verwendet. | ∞ | 0 |
+| Tcs | `TCCelvin` | Cooling down speed | Zeitdauer [min] die benötigt wird, um die Raumtemperatur um 1° zu senken. Ein Wert > 0 überschreibt den vom intelligenten Raumregler gelernten Wert. Falls der Wert 0 ist, wird der vom Raumregler gelernte Wert verwendet. | ∞ | 0 |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 451 · KB: https://www.loxone.com/help/IRoomcontrol
+
+---
+
+### Raumregelung (`Roomcontrol`)
+
+Ausgang (Q) ist ein PWM-Ausgang dessen Einschaltperiode “Qon” sich wie folgt berechnet: Qon = P x ((AQ x 10) / 100) Einstellung der Parameter M,P,V: Für Flächenheizung: M=600, P=600, V=0,7 Für Heizkörper: M=180, P=180, V=0,5
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| T | `Input` | Target temperature | Analoger Eingang SOLL-Temperatur | ∞ |
+| AI | `Temp` | Temperature | Analoger Eingang aktuelle IST-Temperatur (Raumtemperatur) | ∞ |
+| On | `On` | Continuos ON | Dauer EIN (AQ = 10, Q = 1) | – |
+| Off | `Off` | Duration OFF | Dauer AUS (AQ = 0, Q = 0) | – |
+| St | `Stop` | Stop | Regelung ist deaktiviert, Ausgänge bleiben unverändert | – |
+| Dis | `InputDisable` | Disable | Sperrt Eingang (T) (Kindersicherung) | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| AQ | `AQ` | – | Analoger Ausgang (für stetige Ventile) | ∞ |
+| Q | `Q` | – | Digitaler Ausgang (für Ein/Aus-Ventile) | – |
+| Qe | `Qe` | – | Ausgang Fehler | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| M | `Mode` | Scan duration | Abtastdauer in Sekunden | ∞ s | 600 |
+| P | `PwmPeriod` | Duration of PWM period | PWM-Periodendauer des Ausgangs (Q) | ∞ s | 600 |
+| V | `Amplifier` | Gain | Verstärkung des Reglers | ∞ | 1,1 |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 440
+
+---

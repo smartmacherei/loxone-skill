@@ -95,3 +95,19 @@ außerhalb der Visualisierung?" ist sie die Referenz — Befund in
   Skript `scripts/techdoc_abgleich.py`, Bericht [techdoc-abgleich.md](techdoc-abgleich.md). Sechs
   Zuordnungen korrigiert (Präsenz-Ausgänge vertauscht, Brandmelder-Eingänge vertauscht, zwei
   Raumregler-Ausgänge, sechs Alarm-Eingänge aufgelöst). **Nach jedem Config-Update erneut laufen lassen.**
+
+## Katalog-Ergänzung aus der TechDoc (05.09.2026)
+
+`scripts/techdoc_katalog.py <sys_DEU.zip> --apply` schreibt in die `bausteine-*.md`:
+20 Bausteine ohne KB-Seite als Abschnitte `### Name (\`LxType\`)` unter „Aus der TechDoc ergänzt"
+am Dateiende, je vorhandener Seite eine Tabelle **„Weitere Konnektoren laut TechDoc"** mit den
+Kürzeln, die die KB-Seite weglässt (34 Seiten), und die 26 Einträge ohne Konnektoren als Tabelle
+in [bausteine-geraete-erweiterungen.md](bausteine-geraete-erweiterungen.md). Idempotent — erzeugte
+Teile werden beim nächsten Lauf ersetzt, von Hand nichts hineinschreiben.
+
+**Vorsicht beim Lesen alter Abgleich-Berichte:** Der Abgleich vom 05.09. (vormittags) meldete
+„104 Bausteine ohne Katalogseite". Das war ein Parserfehler — fünf Katalogdateien führen ihre
+Bausteine als Überschrift dritter Ebene (`### Und`), und `parse_catalog` las nur zweite Ebene.
+Nach der Korrektur fehlten tatsächlich 46, davon 26 ohne Konnektoren. Analog rendert `<v>`
+in der Bausteinbeschreibung nichts Falsches — aber `%d`/`%e`-Platzhalter in TechDoc-Texten stehen
+für nummerierte Konnektoren (`AQh%d` → `AQh1…`).

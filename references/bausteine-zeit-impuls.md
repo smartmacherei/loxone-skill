@@ -44,6 +44,11 @@ Keine Warnhinweise oder Achtung-Boxen dokumentiert.
 
 Quelle: https://www.loxone.com/dede/kb/einschalt-verzoegerung/
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Off | `Reset` | Eingang | Off / Lock | Impuls(< 1 s): Ausgänge werden zurückgesetzt / ausgeschaltet. Konstant 1 (> 1 s): Baustein ist gesperrt. Dominierender Eingang. | – |
+
 ---
 
 ## 2. Einschaltverzögerung speichernd
@@ -84,6 +89,11 @@ Quelle: https://www.loxone.com/dede/kb/einschalt-verzoegerung-speichernd/
 Keine Warnhinweise oder Achtung-Boxen dokumentiert.
 
 Quelle: https://www.loxone.com/dede/kb/einschalt-verzoegerung-speichernd/
+
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Off | `Reset` | Eingang | Off / Lock | Impuls(< 1 s): Ausgänge werden zurückgesetzt / ausgeschaltet. Konstant 1 (> 1 s): Baustein ist gesperrt. Dominierender Eingang. | – |
 
 ---
 
@@ -126,6 +136,11 @@ Keine Warnhinweise oder Achtung-Boxen dokumentiert.
 
 Quelle: https://www.loxone.com/dede/kb/ausschalt-verzoegerung/
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Off | `Reset` | Eingang | Off / Lock | Impuls(< 1 s): Ausgänge werden zurückgesetzt / ausgeschaltet. Konstant 1 (> 1 s): Baustein ist gesperrt. Dominierender Eingang. | – |
+
 ---
 
 ## 4. Ein- und Ausschaltverzögerung
@@ -167,6 +182,11 @@ Quelle: https://www.loxone.com/dede/kb/ein-und-auschalt-verzoegerung/
 Keine Warnhinweise oder Achtung-Boxen dokumentiert.
 
 Quelle: https://www.loxone.com/dede/kb/ein-und-auschalt-verzoegerung/
+
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Off | `Reset` | Eingang | Off / Lock | Impuls(< 1 s): Ausgänge werden zurückgesetzt / ausgeschaltet. Konstant 1 (> 1 s): Baustein ist gesperrt. Dominierender Eingang. | – |
 
 ---
 
@@ -253,6 +273,11 @@ Quelle: https://www.loxone.com/dede/kb/flankengetriggertes-wischrelais/
 Keine Warnhinweise oder Achtung-Boxen dokumentiert.
 
 Quelle: https://www.loxone.com/dede/kb/flankengetriggertes-wischrelais/
+
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Off | `Reset` | Eingang | Off / Lock | Impuls(< 1 s): Ausgänge werden zurückgesetzt / ausgeschaltet. Konstant 1 (> 1 s): Baustein ist gesperrt. Dominierender Eingang. | – |
 
 ---
 

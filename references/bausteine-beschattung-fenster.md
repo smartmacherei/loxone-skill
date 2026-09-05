@@ -499,6 +499,11 @@ Fasst bis zu drei Fenstersensoren (geöffnet, gekippt, verriegelt) zusammen und 
 
 Quelle: https://www.loxone.com/dede/kb/composite-fensterkontakt/
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| O | `Q` | Ausgang | – | Digitaler Ausgang für vollständig geschlossenes Fenster | ∞ |
+
 ---
 
 ## ### Windmesser
@@ -624,3 +629,57 @@ Insgesamt 10 Bausteine erfolgreich katalogisiert. Alle Tabellen wurden wörtlich
 - Zentral-Bausteine geben Anzahl (No/Nc) statt individueller Positionen aus
 - Wind alarm Eingang (Wa) in 5 Bausteinen für Sturmschutz dokumentiert
 - Composite-Fensterkontakt hat Eingang ohne Kürzel (nur "Open", "Tilt", "Secured")
+
+---
+
+## Aus der TechDoc ergänzt
+
+Stand 05.09.2026, Loxone Config 17.1.6.30. Diese Bausteine haben keine eigene Seite in der KB-Kategorie „Funktionsbausteine"; Ein-/Ausgänge und Parameter stammen aus der maschinenlesbaren Bausteindoku des Config-Pakets ([techdoc-lxres.md](techdoc-lxres.md)), Kennzeichnung `[BELEGT-TECHDOC]`. Eigenschaften und Fallstricke kennt die TechDoc nicht. Erzeugt von `scripts/techdoc_katalog.py` — nicht von Hand bearbeiten, sondern das Skript nach einem Config-Update erneut laufen lassen.
+
+### Jalousie (`JalousieUpDown2`)
+
+Jalousiemotorsteuerung mit Zweitastenbedienung inklusive Komfortfunktionen
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Up | `InputTriggerUp` | Trigger Up | AUF-Eingang der Jalousie | – |
+| Dw | `InputTriggerDown` | Trigger Down | AB-Eingang der Jalousie | – |
+| Cu | `EndUp` | Complete up | Beschattung komplett AUF fahren | – |
+| Cd | `EndDown` | Complete down | Beschattung komplett AB fahren | – |
+| S | `Shade` | Shading | Beschattungseingang. Jalousie komplett AB fahren (laut Zeit Td) dann Rückfahrt (laut Zeit Tr) zum Geradestellen der Lamellen Bei Rolladen/Rollo/Markise Fahrt bis zum eingestellten Wert. | – |
+| St | `Stop` | Stop | Stop-Eingang der Jalousie | – |
+| AIp | `ManualPosition` | Position of blinds | Analoger Eingang Position der Jalousie in % | ∞ |
+| AIl | `ManualLamelle` | Position of slats | Analoger Eingang Position der Lamelle in % | ∞ |
+| Dis | `InputDisable` | Disable | Disable-Eingang der Jalousie (Kindersicherung) | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Q↑ | `OutputUp` | – | Digitaler Ausgang für Jalousie Auf | – |
+| Q↓ | `OutputDown` | – | Digitaler Ausgang für Jalousie Ab | – |
+| AQp | `OutputPos` | – | Position der Beschattung (0.0 = oben, 1.0 = unten) | 0.0…1.0 |
+| AQl | `OutputLPos` | – | Position der Lamellen (0.0 = horizontal, 1.0 = vertikal) | 0.0…1.0 |
+| API | `OutputAPI` | API Connector | Intelligenter API basierter Verbinder. Kann verschiedene Funktionen zwischen Geräten und Bausteinen verknüpfen. API Commands (http://updatefiles.loxone.com/KnowledgeBase/Online/Common/Documents/API_Commands.pdf) | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Tc | `MinPulse` | Minimum input pulse duration [s] for a complete motion | Minimale Dauer [s] des Eingangsimpulses (Up, Dw) zum Auslösen einer kompletten Auf- oder Abfahrt. Wenn Sie lieber Doppelklick verwenden möchten, dann setzen Sie hier einen sehr hohen Wert ein. | ∞ | 3 |
+| Tu | `TimeEnd` | Duration [s] output pulse completely UP | Dauer [s] Ausgangsimpuls (Fahrzeit) bei kompletter AUF-Fahrt | ∞ | 75 |
+| Td | `TimeEndDown` | Duration [s] output pulse completely DOWN | Dauer [s] Ausgangsimpuls (Fahrzeit) bei kompletter AB-Fahrt | ∞ | 70 |
+| TI | `TimeBlock` | Time [s] motor lock | Dauer [s] der Motorverrieglung bei Richtungswechsel | ∞ | 0,5 |
+| Tdc | `DblClk` | Double-click interval [s] | Doppelklickzeit [s] bei Eingangsimpuls (Up, Dw) zum Auslösen einer kompletten Auf- oder Abfahrt. Wenn Sie keinen Doppelklick verwenden möchten, dann setzen Sie hier 0 ein. | ∞ | 0,3 |
+| Tr | `Back` | Duration [s] for return motion | Rückfahrzeit [s] für Beschattung (Geradestellen der Lamellen) bzw. Beschattungsposition [0.0-1.0] bei Rollladen/Rollo/Markise | ∞ | 0,8 |
+| M | `MinMove` | Minimum travel time | Dauer [s] Ausgangsimpuls (Fahrzeit) bei kurzem Tastendruck | ∞ | 0,4 |
+| T | `Type` | Type | Typ der Jalousie 0 = Jalousie/Raffstore 1 = Rollladen/Rollo/Dachrollo 2 = Vorhang beidseitig 3 = -nicht unterstützt- 4 = Vorhang links 5 = Vorhang rechts 6 = Markise | ∞ | 0 |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 349
+
+---

@@ -58,6 +58,12 @@ Dieser Baustein erfasst den Verbrauch oder die Lieferung verschiedener Medien wi
 
 Quelle: https://www.loxone.com/dede/kb/zaehler/
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Rw | `ORw` | Ausgang | Reading this week | Zählerstand diese Woche | ≥ 0 |
+| Rlw | `ORlw` | Ausgang | Reading last week | Zählerstand letzte Woche | ≥ 0 |
+
 ---
 
 ## 2. Zähler & Speicher
@@ -329,6 +335,12 @@ Dieser Zähler erfasst Impulse physischer Zähler mit Impulsausgang (S0) zur Mes
 
 Quelle: https://www.loxone.com/dede/kb/impulszaehler/
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Rw | `ORw` | Ausgang | Reading this week | Zählerstand diese Woche | ≥ 0 |
+| Rlw | `ORlw` | Ausgang | Reading last week | Zählerstand letzte Woche | ≥ 0 |
+
 ---
 
 ## 7. Impulszähler & Speicher
@@ -517,6 +529,12 @@ Der Festwertzähler berechnet Zählerstand aus der Einschaltdauer für Verbrauch
 - Keine Warnhinweise, Achtung-Boxen oder Hinweis-Boxen im Dokument vorhanden.
 
 Quelle: https://www.loxone.com/dede/kb/festwertzaehler/
+
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Rw | `ORw` | Ausgang | Reading this week | Zählerstand diese Woche | ≥ 0 |
+| Rlw | `ORlw` | Ausgang | Reading last week | Zählerstand letzte Woche | ≥ 0 |
 
 ---
 

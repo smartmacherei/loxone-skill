@@ -78,6 +78,11 @@ Keine Eigenschaften-Tabelle im Dokument vorhanden.
 ### Fallstricke [BELEGT]
 Keine separaten Warnhinweise, Achtung-Boxen oder Hinweis-Boxen dokumentiert.
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Rem | `Remanence` | Parameter | Remanence input | Remanenzeingang: Wenn aktiv, behält der Baustein seinen letzten Zustand nach einem Miniserver-Neustart. Der Zustand des Bausteins wird gespeichert: – Beim Speichern in den Miniserver – Bei einem geplanten Neustart – Vor einem Backup – Einmal pro Stunde Die Daten werden auf der SD gespeichert. | – |
+
 ---
 
 ## ### Schalter
@@ -433,6 +438,12 @@ Quelle: https://www.loxone.com/dede/kb/touch-pure-flex-controller/
 
 "Wenn die Helligkeit über einen Bausteinparameter auf 0 % gesetzt ist und der Eingang (LbT) aktiv ist, wird bei Berührung des Displays die in den Geräteeigenschaften festgelegte Helligkeit verwendet."
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Dl | `indaylight` | Eingang | Daylight active | Der Raum wird durch Sonnenlicht beleuchtet und alle anderen Lichter werden ausgeschaltet. Dieser Eingang wird nicht verwendet, wenn ein Lichtsteuerungs Baustein über den API-Connector verbunden ist. | – |
+| Dis | `indis` | Eingang | Disable periphery control | Deaktiviert alle Eingänge, wenn eingeschaltet (z. B. Kindersicherung, Reinigung). | – |
+
 ---
 
 ## ### Touch & Grill Baustein
@@ -673,3 +684,90 @@ Keine separaten Warnhinweise, Achtung-Boxen oder Hinweis-Boxen dokumentiert.
 | Webpage | [OFFEN] | [OFFEN] | [OFFEN] | [BELEGT] | [OFFEN] | ⚠ |
 | Miniserver Shortcut | [OFFEN] | [OFFEN] | [OFFEN] | [BELEGT] | [OFFEN] | ⚠ |
 | EIB-Taster | [BELEGT] | [BELEGT] | [BELEGT] | [OFFEN] | [BELEGT] | ✓ |
+
+---
+
+## Aus der TechDoc ergänzt
+
+Stand 05.09.2026, Loxone Config 17.1.6.30. Diese Bausteine haben keine eigene Seite in der KB-Kategorie „Funktionsbausteine"; Ein-/Ausgänge und Parameter stammen aus der maschinenlesbaren Bausteindoku des Config-Pakets ([techdoc-lxres.md](techdoc-lxres.md)), Kennzeichnung `[BELEGT-TECHDOC]`. Eigenschaften und Fallstricke kennt die TechDoc nicht. Erzeugt von `scripts/techdoc_katalog.py` — nicht von Hand bearbeiten, sondern das Skript nach einem Config-Update erneut laufen lassen.
+
+### Device Tablet (`Device Tablet`)
+
+Managed Tablets can be further integrated with this function block.
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Ds | `Ds` | Default screen | Input can be used to launch the specified Default Screen on the Tablet by triggering this input. | – |
+| P | `P` | Presence | As long as the input is active the display will stay on and the Screensaver stays off, even if the tablet is idle and there is no user interaction. | – |
+| Dnd | `Dnd` | Do not disturb | All notifications will be silenced. Fully dims the display or dims to the value specified via parameter SBr, depending on the screensaver settings, as long as there is no user interaction. Overrides input (P). | – |
+| Off | `Off` | Off | Turns off the device. | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| DBr | `ODBr` | Current display brightness | – | 0…100 % |
+| Ui | `OUi` | User interaction | Stays ON as long as the tablet is in use. Goes Off after the user interaction overrun duration has ended. | 0…100 |
+| API | `API` | API Connector | Intelligenter API basierter Verbinder. Kann verschiedene Funktionen zwischen Geräten und Bausteinen verknüpfen. API Commands (http://updatefiles.loxone.com/KnowledgeBase/Online/Common/Documents/API_Commands.pdf) | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| DBr | `DBr` | Display brightness | Controls the brightness of the display. Higher values make the screen brighter; lower values make it dimmer. | 0…100 % | – |
+| SBr | `SBr` | Screensaver brightness | Controls the brightness of the display when the Screensaver is on. Higher values make the screen brighter; lower values make it dimmer. | 0…100 % | – |
+| V | `V` | Volume | Adjusts the output volume of the device. Increasing this value makes the sound louder; decreasing it makes it quieter. | 0…100 % | – |
+| Va | `Va` | Volume alarm sounds | The volume of the device when alarm is active. Higher values make alarms louder; lower values make them quieter. | 0…100 % | – |
+| Vbell | `Vbell` | Volume doorbell | The volume of the device when doorbell is triggered. Higher values make the doorbell louder; lower values make it quieter. | 0…100 % | – |
+| Lm | `Lm` | Light mode | Specifies the visual theme of the App. When enabled, light mode is active. | – | – |
+| Hs | `Hs` | Header style | Specifies the appearance and layout of the header section. | – | – |
+| ABr | `ABr` | Adaptive brightness | Specifies whether the display brightness automatically adjusts. | – | – |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 545 · KB: https://www.loxone.com/help/ManagedTabletBlock
+
+---
+
+### Touch Pure Display Controller (`TPDC`)
+
+Configure and Control Touch Pure Display Devices
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| P | `P` | Presence | When connected and presence ends, the display automatically switches to Eco mode. | – |
+| On | `On` | On | Activates the display and ends Rest Mode. Rest Mode is not activated as long as this input is active. Is overriden by the Eco input. | – |
+| DnD | `DnD` | Do not Disturb | Activates Do Not Disturb mode. Bell notifications are suppressed. Alerts remain active (e.g. alarm system). | – |
+| Nm | `Nm` | Night Mode | Activates Night Mode on the display. Reduces brightness and adjusts colors for comfortable viewing in dark environments without causing glare. | – |
+| DisPc | `Dis` | Disable periphery control | Disables all inputs when On. (e.g. Child lock, cleaning) | – |
+| Eco | `Eco` | Eco | Activates Eco mode. Turns off non-essential functions to save power. The display can be woken up by touch interaction. | – |
+| Bell | `Bell` | Bell | Triggers a bell notification on the display. Has no effect when Do Not Disturb is active. | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| TQ | `TQ` | Last interaction | Text output for the last accepted interaction on a Touch Pure Display. | – |
+| API | `OutputAPI` | API Connector | Intelligenter API basierter Verbinder. Kann verschiedene Funktionen zwischen Geräten und Bausteinen verknüpfen. API Commands (http://updatefiles.loxone.com/KnowledgeBase/Online/Common/Documents/API_Commands.pdf) | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| ABr | `ABr` | Automatic Brightness | Activates automatic brightness control. When active, the device adjusts brightness automatically. BrGain shifts the base brightness up or down. | – | – |
+| BrMan | `BrMan` | Manual Brightness | Set the brightness of the Display. | 0…100 % | 60 |
+| VolDef | `VolDef` | Default Speaker Volume | Default volume for the built-in speakers. | 0…100 % | 80 |
+| BrDelta | `BrDelta` | Rest Mode Brightness Delta | Dims or brightens the display when Rest Mode activates. Negative values dim, positive values brighten the current brightness level. Does not apply when Rest Mode is set to Eco. | -5…5 Steps | -2 |
+| BrGain | `BrGain` | Brightness Gain | Shifts the automatic brightness regulation curve up or down. Negative values dim, positive values brighten the automatic brightness level. Only used when Automatic Brightness is enabled. | -5…5 Steps | 0 |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 544
+
+---

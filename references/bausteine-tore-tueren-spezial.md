@@ -651,6 +651,12 @@ Quelle: https://www.loxone.com/dede/kb/automatik-regel/
 
 [BELEGT] Im Dokument sind **keine Warnhinweise, Achtung-Boxen oder Hinweis-Boxen** vorhanden, die wörtlich wiedergegeben werden könnten.
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| I | `Run` | Eingang | – | Automatik-Regel auslösen | – |
+| A | `A` | Ausgang | execute | Automatik-Regel wird ausgeführt | – |
+
 ---
 
 ## Zusammenfassung
@@ -666,3 +672,52 @@ Quelle: https://www.loxone.com/dede/kb/automatik-regel/
 | Saunasteuerung mit Verdampfer | [BELEGT] | https://www.loxone.com/dede/kb/saunasteuerung-mit-verdampfer/ |
 | Wecker | [BELEGT] | https://www.loxone.com/dede/kb/wecker/ |
 | Automatik-Regel | [BELEGT] | https://www.loxone.com/dede/kb/automatik-regel/ |
+
+---
+
+## Aus der TechDoc ergänzt
+
+Stand 05.09.2026, Loxone Config 17.1.6.30. Diese Bausteine haben keine eigene Seite in der KB-Kategorie „Funktionsbausteine"; Ein-/Ausgänge und Parameter stammen aus der maschinenlesbaren Bausteindoku des Config-Pakets ([techdoc-lxres.md](techdoc-lxres.md)), Kennzeichnung `[BELEGT-TECHDOC]`. Eigenschaften und Fallstricke kennt die TechDoc nicht. Erzeugt von `scripts/techdoc_katalog.py` — nicht von Hand bearbeiten, sondern das Skript nach einem Config-Update erneut laufen lassen.
+
+### Viking iMow (`Weed`)
+
+Dieser Baustein erlaubt die Steuerung eines Viking Rasenmäherroboters über den Miniserver. Starten und stoppen Sie den Mähvorgang über Bausteineingänge oder die App und legen Sie Mähzeiten fest.
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| M | `InStart` | – | Mähen: der Roboter mäht, solange der Eingang aktiv ist. Dieses Kommando übersteuert den Mähplan. | – |
+| Mp | `InPause` | – | Mähvorgang pausieren: Der Roboter bleibt an Ort und Stelle stehen, solange der Eingang aktiv ist. Dieses Kommando übersteuert den Mähplan. | – |
+| D | `InStop` | – | Dock: Der Roboter kehrt zur Dockingstation zurück und verbleibt dort, solange der Eingang aktiv ist. Dieses Kommando übersteuert den Mähplan. | – |
+| Mo | `InMove` | – | Bewegungsmeldereingang: Der Roboter pausiert den Mähvorgang, sobald ein angeschlossener Bewegungsmelder auslöst. Wird eine längere Anwesenheit (Parameter Td) erkannt, fährt der Roboter zurück zur Dockingstation und wartet dort auf freies Feld. | – |
+| DisMo | `InDisMove` | – | Bewegungsmelder deaktivieren: Verhindert einen Eingriff in den Mähvorgang durch den Bewegungsmelder. | – |
+| Dis | `InDis` | – | Sperrt alle Eingänge des Bausteins (Kindersicherung). | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Qd | `OutDock` | – | Roboter in Dockingstation | – |
+| Qm | `OutAuto` | – | Roboter führt Mähvorgang aus | – |
+| Qp | `OutPause` | – | Mähvorgang pausiert, Roboter wartet auf weitere Anweisungen. | – |
+| Qw | `OutTransit` | – | Roboter befindet sich im Fahrtmodus (mäht nicht). | – |
+| Qc | `OutLoad` | – | Roboter befindet sich in der Dockingstation und wird geladen. | – |
+| Qr | `OutRain` | – | Regensensor des Roboters hat ausgelöst | – |
+| Qe | `OutError` | – | Fehler erkannt, Benutzeraktion benötigt | – |
+| AQb | `OutABatt` | – | Ladezustand des Akkus | ∞ |
+| AQm | `OutAState` | – | Aktueller Betriebsmodus des Roboters: 0=Angedockt, 1=Lädt, 2=Mähen (manuell), 3=Mähen (Zeitplan), 4=Pause (manuell), 5=Pause (Anwesenheit), 6=Fahrt, 7=Verlässt das Dock, 8=Rückkehr zum Dock, 9=Fehler | ∞ |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Td | `PauseTimeout` | – | Zeitspanne [sec] nach deren Ablauf der Roboter zum Dock zurückkehrt, falls er durch die Anwesenheitserkennung pausiert wurde. | ∞ | 300 |
+| Th | `MvOffDelay` | – | Bewegungsmelder Ausschaltverzögerung - Der Mäher nimmt seine Arbeit erst wieder auf, wenn für die angegebene Zeitspanne keine Anwesenheit mehr detektiert wurde. | ∞ s | 60 |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 486
+
+---

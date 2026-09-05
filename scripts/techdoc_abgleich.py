@@ -32,17 +32,50 @@ ALIAS: dict[str, str] = {
     "Programm (Baustein)": "Programm",
     "Zähler & Speicher": "Zähler für Speicher",
     "Impulszähler & Speicher": "Impulszähler für Speicher",
+    "Wallbox Gen. 1": "Wallbox",
+    "Touch & Grill Baustein": "Touch & Grill",
 }
 # Katalog-Ueberschriften, die keine Bausteine sind
 SKIP = re.compile(r"^(Zusammenfassung|Notizen|Besonderheiten|Sonderzeichen|Praxis:|Logische Bausteine|Statusbausteine|"
-                  r"Speicher und Zeitbausteine|Flanken- und Zeitbausteine|Vergleichsbausteine|Impulsschalter$|Binär-Kodierung$)")
+                  r"Speicher und Zeitbausteine|Flanken- und Zeitbausteine|Vergleichsbausteine|Impulsschalter$|Binär-Kodierung$|"
+                  r"Anmerkung|Erfolgreich abgerufene|PTZ|Aus der TechDoc ergänzt|Einträge ohne Konnektoren|[⚠🛑`])")
 
 
 def norm(s: str) -> str:
     s = unicodedata.normalize("NFKC", s or "").strip().lower()
     s = re.sub(r"^(?:\d+\.|baustein \d+:)\s*", "", s)   # "1. Addierer", "Baustein 3: ..."
     s = re.sub(r"\s*\(baustein\)$", "", s)
+    s = re.sub(r"\s*\(`[^`]*`\)$", "", s)                # "Größer (`Greater`)" - erzeugte Seiten
     return re.sub(r"[\s\-–/&]+", "", s)
+
+
+def heading_lxtype(title: str):
+    """'Größer (`Greater`)' -> 'Greater' (erzeugte TechDoc-Seiten tragen den LxType im Titel)."""
+    m = re.search(r"\(`([A-Za-z0-9_ ]+)`\)\s*$", title or "")
+    return m.group(1) if m else None
+
+
+def match_blocks(catalog: dict, td: dict):
+    """Katalogseite -> LxType: LxType im Titel, sonst Name (ALIAS), sonst Namensaehnlichkeit >= 0.9.
+    Liefert (matched, fuzzy, by_name)."""
+    by_name = {}
+    for lx, v in td.items():
+        by_name.setdefault(norm(v["name"]), lx)
+    matched, fuzzy = {}, {}
+    for name in catalog:
+        lx = heading_lxtype(name)
+        if lx and lx in td:
+            matched[name] = lx
+            continue
+        lx = by_name.get(norm(ALIAS.get(name, name)))
+        if not lx:
+            cand = difflib.get_close_matches(norm(name), list(by_name), n=1, cutoff=0.9)
+            if cand:
+                lx = by_name[cand[0]]
+                fuzzy[name] = td[lx]["name"]
+        if lx:
+            matched[name] = lx
+    return matched, fuzzy, by_name
 
 
 def kz_alts(raw: str) -> set[str]:
@@ -103,30 +136,82 @@ def parse_mapping(path: str):
     return out
 
 
+SECTION_RE = re.compile(r"^(Eing[äa]e?nge|Ausg[äa]e?nge|Parameter|Eigenschaften|Fallstricke|Anwendung\w*|Quelle\w*|"
+                        r"Hinweise?|Besonderheiten|Weitere Konnektoren.*)\b", re.I)
+SECTION_KEY = {"e": "E", "a": "A", "p": "P"}
+
+
+def _section(text: str):
+    """'Eingänge [BELEGT]' -> 'E', 'Ausgaenge' -> 'A', 'Parameter' -> 'P', sonst None."""
+    m = SECTION_RE.match(text.strip())
+    if not m:
+        return None
+    return SECTION_KEY.get(m.group(1)[0].lower()) if m.group(1)[0].lower() in "eap" and not m.group(1).lower().startswith("eigen") else False
+
+
 def parse_catalog(paths):
+    """Bausteine (Ueberschriften Ebene 2-4) mit ihren Kuerzelmengen E/A/P je Tabellen-Erstspalte.
+
+    Die Katalogdateien sind uneinheitlich: Bausteine stehen mal als '## 1. Addierer' mit
+    Abschnitten '### Eingänge', mal als '### Und' unter einer Gruppe '## Logische Bausteine' mit
+    Abschnitten '#### Eingänge' oder fett '**Eingänge**'. Eine Ueberschrift ist eine Gruppe, wenn
+    ihr direkt eine tiefere Nicht-Abschnitts-Ueberschrift folgt. Bis 05.09.2026 las der Parser nur
+    Ebene 2 - fuenf Dateien (66 Bausteine) galten dadurch faelschlich als fehlend.
+    """
     out = {}
     for p in paths:
+        lines = Path(p).read_text(encoding="utf-8").splitlines()
+        # '## ### 2 Tasten' kommt vor (doppelte Raute aus dem Scraper) - fuehrende Rauten im Text weg
+        heads = [(i, len(m.group(1)), re.sub(r"^[#\s]+", "", m.group(2)).strip()) for i, l in enumerate(lines)
+                 if (m := re.match(r"^(#{2,4})\s+(.+?)\s*$", l))]
+        groups = set()
+        for k, (i, lvl, text) in enumerate(heads):
+            if _section(text) is not None or SKIP.match(text):
+                continue
+            nxt = next(((l2, t2) for (_, l2, t2) in heads[k + 1:] if _section(t2) is None), None)
+            if nxt and nxt[0] > lvl:
+                groups.add(i)
         block, sec = None, None
-        for line in Path(p).read_text(encoding="utf-8").splitlines():
-            m = re.match(r"^## #{0,3}\s*(.+?)\s*$", line)
+        for i, line in enumerate(lines):
+            m = re.match(r"^(#{2,4})\s+(.+?)\s*$", line)
             if m:
-                block, sec = m.group(1), None
-                if SKIP.match(block):
-                    block = None
+                text = re.sub(r"^[#\s]+", "", m.group(2)).strip()
+                s = _section(text)
+                if s is not None:
+                    sec = s or None
                     continue
+                if i in groups or SKIP.match(text):
+                    block, sec = None, None
+                    continue
+                block, sec = text, None
                 out[block] = {"E": set(), "A": set(), "P": set(), "file": os.path.basename(p)}
                 continue
-            m = re.match(r"^### (Eingänge|Ausgänge|Parameter)", line)
+            m = re.match(r"^\*\*([^*]+)\*\*", line)
             if m and block:
-                sec = {"Eingänge": "E", "Ausgänge": "A", "Parameter": "P"}[m.group(1)]
-                continue
-            if line.startswith("### "):
-                sec = None
-            if block and sec and line.startswith("| ") and not line.startswith("| Kürzel") and not line.startswith("|--"):
-                kz = line.strip().strip("|").split("|")[0].strip().strip("`")
-                if kz and kz not in ("-", "–", "−"):
-                    out[block][sec].add(kz)
+                if m.group(1).startswith("Weitere Konnektoren"):
+                    sec = "W"          # erzeugte Tabelle: Richtung steht in der Spalte "Art"
+                    continue
+                s = _section(m.group(1))
+                if s is not None:
+                    sec = s or None
+                    continue
+            if block and sec and line.startswith("| ") and not re.match(r"^\|\s*(Kürzel|Kuerzel|Gruppe)", line) and not line.startswith("|--"):
+                cells = [c.strip() for c in line.strip().strip("|").split("|")]
+                kz = cells[0].strip("`")
+                d = sec
+                if sec == "W":
+                    d = {"Eingang": "E", "Ausgang": "A", "Parameter": "P"}.get(cells[2] if len(cells) > 2 else "", None)
+                if d and kz and kz not in ("-", "–", "−") and not kz.startswith("---"):
+                    out[block][d].add(kz)
     return out
+
+
+def device_table_lxtypes(refs: str) -> set[str]:
+    """LxTypes aus der Tabelle 'Einträge ohne Konnektoren' (bausteine-geraete-erweiterungen.md)."""
+    p = Path(refs, "bausteine-geraete-erweiterungen.md")
+    if not p.exists():
+        return set()
+    return set(re.findall(r"^\| [^|]+ \| `([A-Za-z0-9_ ]+)` \|", p.read_text(encoding="utf-8"), re.M))
 
 
 def main():
@@ -137,12 +222,11 @@ def main():
     args = ap.parse_args()
 
     td = techdoc(args.techdoc)
-    by_name = {}
-    for lx, v in td.items():
-        by_name.setdefault(norm(v["name"]), lx)
     refs = os.path.join(args.skill, "references")
     mapping = parse_mapping(os.path.join(refs, "xml-doku-mapping.md"))
     catalog = parse_catalog(sorted(glob.glob(os.path.join(refs, "bausteine-*.md"))))
+    matched, fuzzy, by_name = match_blocks(catalog, td)
+    unmatched = [n for n in catalog if n not in matched]
     L = ["# TechDoc-Abgleich (generiert von scripts/techdoc_abgleich.py)", ""]
 
     # ---- A
@@ -171,18 +255,6 @@ def main():
           "| LxType | XML-Konnektor | Kürzel Skill | Kürzel TechDoc | Befund |", "|---|---|---|---|---|"] + A
 
     # ---- B
-    matched, unmatched, fuzzy = {}, [], {}
-    for name in catalog:
-        lx = by_name.get(norm(ALIAS.get(name, name)))
-        if not lx:
-            cand = difflib.get_close_matches(norm(name), list(by_name), n=1, cutoff=0.9)
-            if cand:
-                lx = by_name[cand[0]]
-                fuzzy[name] = td[lx]["name"]
-        if lx:
-            matched[name] = lx
-        else:
-            unmatched.append(name)
     B, clean = [], 0
     for name, lx in sorted(matched.items()):
         c, t = catalog[name], td[lx]["io"]
@@ -210,7 +282,12 @@ def main():
         sug = difflib.get_close_matches(norm(n), list(by_name), n=2, cutoff=0.6)
         L.append(f"- {n} ({catalog[n]['file']}) → " + (", ".join(f"`{by_name[x]}` ({td[by_name[x]]['name']})" for x in sug) or "kein Vorschlag"))
     used = set(matched.values())
-    rest = [lx for lx in sorted(td) if lx not in used]
+    # Gleichnamige TechDoc-Varianten (Programm = Code1/Code4/Code8/Code16) gelten als abgedeckt
+    covered_names = {norm(td[lx]["name"]) for lx in used}
+    in_table = device_table_lxtypes(refs)
+    rest = [lx for lx in sorted(td) if lx not in used and norm(td[lx]["name"]) not in covered_names and lx not in in_table]
+    if in_table:
+        L += ["", f"{len(in_table & set(td))} Einträge ohne Konnektoren stehen als Tabelle in bausteine-geraete-erweiterungen.md."]
     L += ["", f"### TechDoc-LxTypes ohne Katalogseite ({len(rest)})", ""]
     L += [f"- `{lx}` — {td[lx]['name']}" for lx in rest]
     text = "\n".join(L) + "\n"

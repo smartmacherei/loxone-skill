@@ -86,6 +86,11 @@ https://www.loxone.com/dede/kb/lichtsteuerung/
 - Parameter (Moet) gilt nicht für Präsenzeingang (P)
 - Tageslichtsteuerung mit Parametern MinCt und MaxCt erfordert entsprechende Sensoren
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| M- | `InputTriggerDown` | Eingang | Previous mood | Impuls: Wählt die vorherige Stimmung. Doppelklick: Schaltet das Licht aus und sendet einen Impuls an den Ausgang (2C). Dreifachklick: Schaltet das Licht aus und sendet einen Impuls an die Ausgänge (3C) und (2C). | – |
+
 ---
 
 ## Baustein 2: Licht Zentral
@@ -133,6 +138,12 @@ https://www.loxone.com/dede/kb/licht-zentral/
 https://www.loxone.com/dede/kb/licht-zentral/
 
 [BELEGT] Zentral-Befehle werden auch durch einen aktiven (DisPc) Eingang am jeweiligen Baustein nicht blockiert.
+
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Lc1-n | `In` | Eingang | Light circuit 1-n | Aktiviert den Ausgang (Lc1-4). Langer Klick zum Dimmen. | – |
+| M- | `InputTriggerDown` | Eingang | Previous mood | Impuls: Wählt die vorherige Stimmung. Doppelklick: Schaltet das Licht aus und sendet einen Impuls an den Ausgang (2C). Dreifachklick: Schaltet das Licht aus und sendet einen Impuls an die Ausgänge (3C) und (2C). | – |
 
 ---
 
@@ -404,6 +415,11 @@ https://www.loxone.com/dede/kb/konstantlichtregler/
 
 [BELEGT] Der Konstant-Lichtregler benötigt einen gut positionierten Helligkeitssensor zur schnellen und zuverlässigen Erfassung der Raumhelligkeit. Die Parameter (Hys) und (Sts) sollten angepasst werden, um ein visuell angenehmes Dimmen zu erreichen.
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| TB | `Target` | Parameter | Target brightness | Diese Helligkeit soll vorhanden sein, wenn Regler aktiv. | ∞ lx |
+
 ---
 
 ## Baustein 8: Szene
@@ -444,6 +460,24 @@ https://www.loxone.com/dede/kb/szene/
 
 [BELEGT] Bei der Szene können keine Bedingungen definiert werden. Die Aktionen in der Szene werden also nur ausgeführt, wenn die Szene über den (Act) Eingang oder in der Visualisierung ausgelöst wird.
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| + | `InputTriggerUp` | Eingang | Trigger next scene | Nächste-Eingang des Szenenbausteins | – |
+| AIs | `Select` | Eingang | Scene | Auswahl-Eingang des Szenenbausteins (0-x) | ∞ |
+| Dis | `InputDisable` | Eingang | Disable | Disable-Eingang des Szenenbausteins (Kindersicherung) | – |
+| R | `Reset` | Eingang | – | Reset Eingang des Szenenbausteins Der Name des angeschlossenen Sensors wird in der Visualisierung verwendet. | – |
+| AQn | `AQ1` | Ausgang | – | Analoger Ausgang für Aktor/Dimmer n | ∞ |
+| AQn | `AQ2` | Ausgang | – | Analoger Ausgang für Aktor/Dimmer n | ∞ |
+| AQn | `AQ3` | Ausgang | – | Analoger Ausgang für Aktor/Dimmer n | ∞ |
+| AQn | `AQ4` | Ausgang | – | Analoger Ausgang für Aktor/Dimmer n | ∞ |
+| AQn | `AQ5` | Ausgang | – | Analoger Ausgang für Aktor/Dimmer n | ∞ |
+| AQn | `AQ6` | Ausgang | – | Analoger Ausgang für Aktor/Dimmer n | ∞ |
+| AQn | `AQ7` | Ausgang | – | Analoger Ausgang für Aktor/Dimmer n | ∞ |
+| AQn | `AQ8` | Ausgang | – | Analoger Ausgang für Aktor/Dimmer n | ∞ |
+| AQs | `AQs` | Ausgang | – | Analoger Ausgang für Szene | ∞ |
+| Rem | `Remanence` | Parameter | Remanence input | Remanenzeingang: Wenn aktiv, behält der Baustein seinen letzten Zustand nach einem Miniserver-Neustart. Der Zustand des Bausteins wird gespeichert: – Beim Speichern in den Miniserver – Bei einem geplanten Neustart – Vor einem Backup – Einmal pro Stunde Die Daten werden auf der SD gespeichert. | – |
+
 ---
 
 ## Zusammenfassung Abdeckung
@@ -477,3 +511,146 @@ Die folgenden Kürzel sind besonders wichtig für die spätere Zuordnung zu inte
 *Datei erstellt: 30.07.2026*
 *Recherche durchgeführt mittels offizielle Loxone Knowledge Base*
 *Alle Tabellen wörtlich aus der Quelle übernommen und mit [BELEGT] gekennzeichnet*
+
+---
+
+## Aus der TechDoc ergänzt
+
+Stand 05.09.2026, Loxone Config 17.1.6.30. Diese Bausteine haben keine eigene Seite in der KB-Kategorie „Funktionsbausteine"; Ein-/Ausgänge und Parameter stammen aus der maschinenlesbaren Bausteindoku des Config-Pakets ([techdoc-lxres.md](techdoc-lxres.md)), Kennzeichnung `[BELEGT-TECHDOC]`. Eigenschaften und Fallstricke kennt die TechDoc nicht. Erzeugt von `scripts/techdoc_katalog.py` — nicht von Hand bearbeiten, sondern das Skript nach einem Config-Update erneut laufen lassen.
+
+### Tageslicht Steuerung (BETA) (`DaylightController`)
+
+Dieser Baustein liefert die Farbe der momentanen Tageszeit. Die Helligkeit des Lichts kann unabhängig von der Lichttemperatur gesetzt werden.
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Off | `Deactivate` | – | Mit diesem Eingang kann die Tageslicht Steuerung deaktiviert werden. | – |
+| B | `Brightness` | – | An diesem Eingang kann die Helligkeit des Farbtemperaturverlaufs gesetzt werden. Wird dieser Eingang nicht verwendet, so wird die Helligkeit auf 100% gesetzt. | 0…100 % |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| AQ | `AQ` | – | Analoger Ausgang für Smart-Aktor. | ∞ |
+| API | `OutputAPI` | API Connector | Intelligenter API basierter Verbinder. Kann verschiedene Funktionen zwischen Geräten und Bausteinen verknüpfen. API Commands (http://updatefiles.loxone.com/KnowledgeBase/Online/Common/Documents/API_Commands.pdf) | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Rem | `Remanence` | Remanence input | Remanenzeingang: Wenn aktiv, behält der Baustein seinen letzten Zustand nach einem Miniserver-Neustart. Der Zustand des Bausteins wird gespeichert: – Beim Speichern in den Miniserver – Bei einem geplanten Neustart – Vor einem Backup – Einmal pro Stunde Die Daten werden auf der SD gespeichert. | – | – |
+| NCT | `NightColorTemperature` | – | Mit diesem Parameter kann die Farbtemperatur der Nachtfarbe eingestellt werden. 6500K entspricht natürlichem Tageslicht. Darunter wird das Licht wärmer (gelblich), darüber kälter (bläulich). | 1000…10000 K | 2000 |
+| DCT | `DayColorTemperature` | – | Mit diesem Parameter kann die Farbtemperatur der Tagfarbe eingestellt werden. 6500K entspricht natürlichem Tageslicht. Darunter wird das Licht wärmer (gelblich), darüber kälter (bläulich). | 1000…10000 K | 6500 |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 498
+
+---
+
+### Lichtsteuerung Gen 1 (`LightController`)
+
+Dieser Baustein ermöglicht sowohl die Steuerung mehrerer einzelner Lichtkreise als auch die kombinierte Steuerung durch Lichtszenen (Schalten, Dimmen, RGB)
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| I1-n | `In` | – | Trigger 1-n für Dimmer bzw. Schalteingang für Leuchten | – |
+| + | `InputTriggerUp` | Trigger next scene | Nächste Szene | – |
+| - | `InputTriggerDown` | Trigger previous scene | Vorige Szene | – |
+| AIs | `Select` | Scene | Auswahl der Lichtszene mit Wert 0-9 | ∞ |
+| R | `Reset` | Reset | Reset, aktiviert Lichtszene Alles Aus | – |
+| S1-n | `Seln` | – | Trigger Auswahl Lichtszene 1-n 5 Sekunden Impuls lernt den aktuellen Zustand der Ausgänge Doppelimpuls schaltet alles aus und Impuls auf RQ. Dreifachimpuls schaltet alles aus und Impuls auf RaQ. | – |
+| DisMo | `EnMove` | Disable motion sensor input | Verhindert das Einschalten der Bewegungsmelderszene über Mv. Hat keinen Einfluss auf die automatische Lichtabschaltung mit Parameter MT. | – |
+| Mo | `Move` | Motion sensor input | Bewegungsmeldereingang Aktiviert konfigurierte Bewegungsmelderstimmung | – |
+| O | `On` | On | alles EIN Setzt alle Ausgänge auf Ein bzw. Maximum | – |
+| T5 | `Gesture` | Combined button input | Nächste Szene, Aus bei Doppel- bzw. Dreifachklick. | ∞ |
+| A | `Alarm` | Alarm | Alarmeingang Wenn ein, dann blinken alle Lichter mit dem Wert von Parameter Ba | – |
+| AIb | `Brightness` | Current Brightness | IST-Wert der aktuellen Helligkeit Überschreitet der Ist-Wert den Maximalwert, wird die Bewegungsmelderszene nicht aktiviert | ∞ |
+| Dis | `InputDisable` | Disable | Kindersicherung – sperrt alle Eingänge, aber nicht die Visualisierung Bewegungsmeldereingänge werden nicht gesperrt | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| AQ1-n | `AQn` | – | Analoger Ausgang für Aktor/Dimmer 1-n bei RGB - %%-Wert Rot + %%-Wert Grün * 1000 + %%-Wert Blau * 1000000 | ∞ |
+| AQs | `Scene` | – | Analoger Ausgang für aktivierte Szene | ∞ |
+| RQ | `OutputReset` | – | Reset der Lichtszene Wird mit Doppelklick/Dreifachklick auf lichtbeeinflussenden Eingang oder Reset aktiviert | – |
+| RaQ | `OutputResetAll` | – | Reset der Lichtszene 3-fach Impuls | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Rem | `Remanence` | Remanence input | Remanenzeingang: Wenn aktiv, behält der Baustein seinen letzten Zustand nach einem Miniserver-Neustart. Der Zustand des Bausteins wird gespeichert: – Beim Speichern in den Miniserver – Bei einem geplanten Neustart – Vor einem Backup – Einmal pro Stunde Die Daten werden auf der SD gespeichert. | – | – |
+| Tdc | `MaxP` | Double click speed | Doppelklickzeit [s] bei Eingangsimpuls | ∞ | 0,35 |
+| SI | `Step` | Step size | Schrittweite Dimmer in % | ∞ | 2 |
+| ST | `Steptime` | Step rate | Schrittzeit Dimmer Zeitabstand in dem der Ausgangswert mit Schrittweite angepasst wird | ∞ | 0,2 |
+| Min | `Min` | Minimum value | Minimumwert Dimmer (0 bis 50%) | ∞ | 0 |
+| Max | `Max` | Maximum value | Maximumwert Dimmer (50 bis 100%) | ∞ | 100 |
+| W | `Wrap` | Up/Down mode | Auf/Ab-Modus Dimmer (Aus = Stop bei Maximum/Minimum) | – | – |
+| L | `NoLast` | Do not set last value | Letzten Dimmerwert nicht setzen (Aus = Kurzer Klick setzt letzten Wert, wenn ausgeschaltet) | – | – |
+| TH | `MoveOn` | Duration [s] On | Aktiviert die zugewiesene Bewegungsmelderszene und startet bei fallender Flanke diesen Nachlauftimer EIN [s] Startet mit fallender Flanke des Bewegungsmelder Eingangs | ∞ | 900 |
+| Ti | `MoveIgnore` | Delay of the Motion Sensor | Deaktiviert den Bewegungsmelder nach ausschalten für [s] Sekunden Wenn dieser Wert 0 ist gilt der Status von DisMv | ∞ | 300 |
+| LT | `Learntime` | Learn period | Lernzeit Dauer Tastendruck zum Lernen der Szene über Eingänge S1-S8 | ∞ | 5 |
+| MS | `MoveScene` | Motion sensor scene | Szene für Bewegungsmelder, wenn nicht 0 Dies übersteuert die zugewiesene Bewegungsmelderszene (Register Szenen). Beispiel Szene 8 sollte nachts aktiviert werden | ∞ | 0 |
+| MT | `MoveTimeout` | Timeout for the automatic switching off of lights after no motion [s] | Automatische Abschaltung des Lichtes nach Ende letzter Bewegung Wenn dieser Wert ungleich 0 ist, wird der Bewegungsmelder verwendet, um die aktuelle Szene auszuschalten. Unabhängig von (TH) und der zugewiesenen Bewegungsmelderszene. Zur Verwendung um Licht das vergessen wurde automatisch abzuschalten. Empfohlener Wert 30 Minuten (1800) | ∞ | 3600 |
+| Ra | `RGBalt` | Alternative operation I1-I12 when output is RGB | RGB-Bedienung I1 bis I12 (Ein = Kurzer Tastendruck bedeutet Grundfarben durchschalten, langer Tastendruck bedeutet Helligkeit verändern) | – | – |
+| Ta | `AlarmPeriod` | Flashing interval during the alarm[s] | Dauer [s] Periode Ein/Aus, Beispiel 2s, 1s Ein/ 1s Aus | ∞ | 4 |
+| T | `BrightnessLimit` | Brightness threshold [lux] | Maximalwert Helligkeit Überschreitet die aktuelle Helligkeit diesen Wert wird die Bewegungsmelderszene bei Bewegung nicht aktiviert | ∞ | 30 |
+| Ba | `AlarmBrightness` | Maximum brightness level for Alarm | Maximalwert Alarm (10 - 100) Ist Alarm aktiv, schalten die Ausgänge zwischen 0 und [Maximalwert Alarm] | ∞ | 50 |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 356 · KB: https://www.loxone.com/help/LightController
+
+---
+
+### Lichtszene (`LightsceneLearn`)
+
+Lernfähige Lichtszene
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| AIn | `AI1` | – | Analoger Eingang für Aktor/Dimmer n in % Dieser Eingang übersteuert den Lichtszeneausgang n bei Veränderung. | ∞ |
+| AIn | `AI2` | – | Analoger Eingang für Aktor/Dimmer n in % Dieser Eingang übersteuert den Lichtszeneausgang n bei Veränderung. | ∞ |
+| AIn | `AI3` | – | Analoger Eingang für Aktor/Dimmer n in % Dieser Eingang übersteuert den Lichtszeneausgang n bei Veränderung. | ∞ |
+| AIn | `AI4` | – | Analoger Eingang für Aktor/Dimmer n in % Dieser Eingang übersteuert den Lichtszeneausgang n bei Veränderung. | ∞ |
+| AIn | `AI5` | – | Analoger Eingang für Aktor/Dimmer n in % Dieser Eingang übersteuert den Lichtszeneausgang n bei Veränderung. | ∞ |
+| AIn | `AI6` | – | Analoger Eingang für Aktor/Dimmer n in % Dieser Eingang übersteuert den Lichtszeneausgang n bei Veränderung. | ∞ |
+| AIn | `AI7` | – | Analoger Eingang für Aktor/Dimmer n in % Dieser Eingang übersteuert den Lichtszeneausgang n bei Veränderung. | ∞ |
+| AIn | `AI8` | – | Analoger Eingang für Aktor/Dimmer n in % Dieser Eingang übersteuert den Lichtszeneausgang n bei Veränderung. | ∞ |
+| AIs | `Select` | Scene | Auswahl-Eingang der Lichtszene (0-x) | ∞ |
+| R | `Reset` | Reset | Reset Eingang der Lichtszene | – |
+| S1-n | `Seln` | – | Trigger Auswahl Lichtszene 1-n 5 Sekunden Impuls lernt den aktuellen Zustand der Ausgänge Doppelimpuls schaltet alles aus. Dreifachimpuls schaltet alles aus und setzt den Resetausgang. | – |
+| Dis | `InputDisable` | Disable | Disable-Eingang der Lichtszene (Kindersicherung) | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| AQ1-n | `AQn` | – | Analoger Ausgang für Aktor/Dimmer 1-n in %% | ∞ |
+| AQs | `Scene` | – | Analoger Ausgang für aktivierte Szene | ∞ |
+| RQ | `RQ` | – | Reset Ausgang der Lichtszene Wird mit Reseteingang oder Szene 0 aktiviert | – |
+| RaQ | `RaQ` | – | Reset Ausgang der Lichtszene 3-fach Impuls | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Rem | `Remanence` | Remanence input | Remanenzeingang: Wenn aktiv, behält der Baustein seinen letzten Zustand nach einem Miniserver-Neustart. Der Zustand des Bausteins wird gespeichert: – Beim Speichern in den Miniserver – Bei einem geplanten Neustart – Vor einem Backup – Einmal pro Stunde Die Daten werden auf der SD gespeichert. | – | – |
+| M | `Max` | Max time between pulses | Parameter - maximaler Zeitabstand zwischen 2 Impulsen | ∞ s | 0,35 |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 354
+
+---

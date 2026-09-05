@@ -189,6 +189,11 @@ Quelle: https://www.loxone.com/dede/kb/energie-monitor/
 
 Quelle: https://www.loxone.com/dede/kb/energie-monitor/
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| ErrTx | `InErrorText` | Eingang | Error text | Fehlertext | – |
+
 ---
 
 ## 4. Energieflussmonitor
@@ -248,6 +253,12 @@ Quelle: https://www.loxone.com/dede/kb/energieflussmonitor/
 Keine dokumentierten Warnhinweise auf der offiziellen Seite.
 
 Quelle: https://www.loxone.com/dede/kb/energieflussmonitor/
+
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Sc | `OSc` | Ausgang | Self Consumption | Eigenverbrauch | – |
+| Yt | `OYT` | Ausgang | Yield total | Ertrag gesamt | – |
 
 ---
 
@@ -626,6 +637,11 @@ Quelle: https://www.loxone.com/dede/kb/spotpreis-optimierer/
 
 Quelle: https://www.loxone.com/dede/kb/spotpreis-optimierer/
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| +n to +n | `Un` | Eingang | Price in the hour now +n to +n | Preisprognose für die aktuelle Stunde + Offset. | – |
+
 ---
 
 ## 11. Power Supply & Backup (Baustein)
@@ -671,6 +687,11 @@ Keine dokumentierten Warnhinweise auf der offiziellen Seite.
 
 Quelle: https://www.loxone.com/dede/kb/power-supply-backup-block/
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Rst | `OutRemaining` | Ausgang | Remaining supply time | Verbleibende Versorgungsdauer im Backup-Modus bis zum Abschalten. | ∞ min |
+
 ---
 
 ## Zusammenfassung
@@ -698,3 +719,88 @@ Alle 11 Bausteine aus der Kategorie "Energie & Lastmanagement" wurden vollständ
 
 8. **Power Supply & Backup Asymmetrie**: Hat NO Eingänge und NO Parameter — nur Ausgänge und Eigenschaften. Dies ist ungewöhnlich im Vergleich zu anderen Bausteinen.
 
+---
+
+## Aus der TechDoc ergänzt
+
+Stand 05.09.2026, Loxone Config 17.1.6.30. Diese Bausteine haben keine eigene Seite in der KB-Kategorie „Funktionsbausteine"; Ein-/Ausgänge und Parameter stammen aus der maschinenlesbaren Bausteindoku des Config-Pakets ([techdoc-lxres.md](techdoc-lxres.md)), Kennzeichnung `[BELEGT-TECHDOC]`. Eigenschaften und Fallstricke kennt die TechDoc nicht. Erzeugt von `scripts/techdoc_katalog.py` — nicht von Hand bearbeiten, sondern das Skript nach einem Config-Update erneut laufen lassen.
+
+### Verbrauchszähler (`Energy`)
+
+Verbrauchszähler in kWh, oder freidefinierbarer Einheit
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Cp | `Tr` | Consumption pulse | Für Zähler mit Impulsausgang, die an digitale Eingänge angeschlossen sind. | – |
+| Cf | `F` | Consumption frequency | Für Zähler mit Impulsausgang, die an digitale Eingänge angeschlossen sind die als Frequenzzähler verwendet werden. Anzahl der Impulse seit letzter Aktualisierung. | ∞ |
+| C | `V` | Consumption | Für Zähler, die den Verbrauch direkt als Analogwert senden. Parameter (Abs) legt fest, ob der Wert addiert oder als Absolutwert verwendet wird. | ≥ 0 |
+| Pf | `P` | Power or flow | Wird dieser Eingang für die aktuelle Leistung oder den Durchfluss allein verwendet, wird daraus auch der Verbrauch berechnet. Ansonsten wird er nur für Ausgang (Pf) und die Visualisierung verwendet. | ∞ |
+| R | `Reset` | Reset | Impuls: Die Verbrauchswerte an den Ausgängen werden zurückgesetzt. Ein: Baustein ist gesperrt. | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Ct | `AQ` | Consumption total | Gesamtverbrauch | ≥ 0 |
+| Pf | `AQp` | Power or flow | Aktuelle Leistung/Durchfluss berechnet mit Parameter (At) bei Verwendung von (Cp) oder (Cf). Wert wird direkt vom Eingang (Pf) verwendet, falls angeschlossen. | ∞ |
+| Pfp | `AQa` | Power or Flow by pulses | Aktuelle Leistung/Durchfluss, berechnet von einem Impuls zum nächsten. Nur verfügbar, wenn der Eingang (Cp) verwendet wird. | ∞ |
+| Cd | `AQ1` | Consumption today | Verbrauch heute | ≥ 0 |
+| Cyd | `AQ2` | Consumption yesterday | Verbrauch gestern | ≥ 0 |
+| Cbyd | `AQ3` | Consumption day before yesterday | Verbrauch vorgestern | ≥ 0 |
+| Cw | `AQ4` | Consumption this week | Verbrauch diese Woche | ≥ 0 |
+| Clw | `AQ5` | Consumption last week | Verbrauch letzte Woche | ≥ 0 |
+| Cm | `AQ6` | Consumption this month | Verbrauch dieser Monat | ≥ 0 |
+| Clm | `AQ7` | Consumption last month | Verbrauch letzter Monat | ≥ 0 |
+| Cy | `AQ8` | Consumption this year | Verbrauch dieses Jahr | ≥ 0 |
+| Cly | `AQ9` | Consumption last year | Verbrauch letztes Jahr | ≥ 0 |
+| API | `OutputAPI` | API Connector | Intelligenter API basierter Verbinder. Kann verschiedene Funktionen zwischen Geräten und Bausteinen verknüpfen. API Commands (http://updatefiles.loxone.com/KnowledgeBase/Online/Common/Documents/API_Commands.pdf) | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Np | `Factor` | Number of pulses per unit | Dient zur Berechnung des Verbrauchs mit (Cp) oder (Cf). | ∞ Puls/unit | 800 |
+| At | `Time` | Averaging time | Durchschnittszeit | ≥ 0 s | 60 |
+| Mro | `Offset` | Meter reading offset | Der Wert wird dem Output (Ct) hinzugefügt. | ∞ | 0 |
+| Abs | `Abs` | Absolute value | Handhabung des Verbrauchseingangs (C): 0 = Jeder neue Wert wird schrittweise zum Gesamtverbrauch addiert. 1 = Wert wird absolut verwendet und entspricht dem Stand des ausgelesenen Zählers. | 0…1 | – |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 386 · KB: https://www.loxone.com/help/Energy
+
+---
+
+### Power (`Power`)
+
+Mit Hilfe dieses Bausteins steuern Sie ein Power Tree Gerät. Das Power Tree stellt während eines Stromausfalls eine Notstromversorgung Ihrer wichtigsten Loxone Komponenten sicher.
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Ps | `InBattPower` | Power from Grid | Die gewünschte Soll-Batterieleistung, mit der geladen bzw. entladen werden soll. Bei positiven Werten wird geladen, bei negativen Werten entladen. Diese Information ist notwendig, damit das Gerät Energiemanagement betreiben kann. | ∞ kW |
+| Off | `Reset` | Off / Lock | Impuls(< 1 s): Ausgänge werden zurückgesetzt / ausgeschaltet. Konstant 1 (> 1 s): Baustein ist gesperrt. Dominierender Eingang. | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Pf | `OutPowerFailure` | Power Failure | Gibt an, ob aktuell der Strom ausgefallen ist. | – |
+| Stre | `OutTimeRemaining` | Battery Charge Level | Die verbleibende Zeit, für die während eines Stromausfalls eine Notstromversorgung gewährleistet ist. | ≥ 0 min |
+| Ss | `OutSoc` | Battery charge level | Der aktuelle Ladezustand der Batterien. | 0…100 % |
+| Po | `OutOutPower` | Power Output | Die aktuell am Ausgang ausgegebene Leistung. | ≥ 0 kW |
+| API | `OutputAPI` | API Connector | Intelligenter API basierter Verbinder. Kann verschiedene Funktionen zwischen Geräten und Bausteinen verknüpfen. API Commands (http://updatefiles.loxone.com/KnowledgeBase/Online/Common/Documents/API_Commands.pdf) | – |
+
+**Parameter** [BELEGT-TECHDOC]
+[nicht vorhanden]
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 497
+
+---

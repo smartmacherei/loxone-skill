@@ -86,6 +86,11 @@ Quelle: https://www.loxone.com/dede/kb/alarmanlage/
 - "Die maximale Alarmdauer sollte länger sein als die längste Alarmverzögerung, sonst werden bestimmte Alarmstufen nie aktiviert!"
 - "Ein Wert unter 10 [Wartezeit nach Start] kann zu Fehlalarmen bei Neustart des Miniservers führen!"
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| DisP | `DisMv` | Eingang | Disable motion sensor input I1 | Bewegungsmeldereingang I1 deaktivieren | – |
+
 ---
 
 ### Alarmanlage Zentral
@@ -552,6 +557,11 @@ Quelle: https://www.loxone.com/dede/kb/berechtigung-nfc-code-touch/
 - "Für Zutrittscodes gelten dieselben Regeln wie für Kennwörter: Möglichst lang, möglichst schwer zu erraten."
 - "Zur Verwendung dieser Eingänge wird der Baustein Berechtigung NFC Code Touch nicht benötigt. Diese Variante wird nicht für die Zutrittssteuerung zu einem Gebäude empfohlen."
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| PUDel | `PUDel` | Ausgang | Pulse by user deletion | Impuls bei Benutzerlöschung | – |
+
 ---
 
 ### Sprechanlage
@@ -719,3 +729,126 @@ Quelle: https://www.loxone.com/dede/kb/trust/
 
 Folgende Sonderzeichen wurden exakt wie im Original übernommen:
 - **ϑ** (griechisches Theta) im Parameter "Maxϑ" (Brand- und Wassermeldezentrale)
+
+---
+
+## Aus der TechDoc ergänzt
+
+Stand 05.09.2026, Loxone Config 17.1.6.30. Diese Bausteine haben keine eigene Seite in der KB-Kategorie „Funktionsbausteine"; Ein-/Ausgänge und Parameter stammen aus der maschinenlesbaren Bausteindoku des Config-Pakets ([techdoc-lxres.md](techdoc-lxres.md)), Kennzeichnung `[BELEGT-TECHDOC]`. Eigenschaften und Fallstricke kennt die TechDoc nicht. Erzeugt von `scripts/techdoc_katalog.py` — nicht von Hand bearbeiten, sondern das Skript nach einem Config-Update erneut laufen lassen.
+
+### Präsenz Zentral (`CentralPresence`)
+
+Mit diesem Baustein können Präsenzbausteine gemeinsam gesteuert werden. Öffnen Sie mit einem Doppelklick auf den Baustein den Dialog zum Auswählen der verknüpften Bausteine.
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Off | `InputReset` | Off / Lock | Impuls (< 1 s): Ausgänge werden zurückgesetzt / ausgeschaltet. Konstant 1 (> 1 s): Baustein ist gesperrt. Dominierender Eingang. Der Name des angeschlossenen Sensors wird in der Visualisierung verwendet. | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| P | `OutputActive` | Presence | Präsenz | – |
+| Pon | `OutputPOn` | Pulse on presence start | Impuls bei Präsenzstart | – |
+| Poff | `OutputPOff` | Pulse on presence end | Impuls bei Präsenzende | – |
+| Pd | `OutputOnTime` | Current presence duration | Dauer der aktuellen Präsenzphase. | ∞ s |
+| Absent | `OutputPAbsent` | Pulse on absent | Impuls, wenn "P" länger als die in Parameter "Ta" angegebene Zeit inaktiv ist. | – |
+| API | `OutputAPI` | API Connector | Intelligenter API basierter Verbinder. Kann verschiedene Funktionen zwischen Geräten und Bausteinen verknüpfen. API Commands (http://updatefiles.loxone.com/KnowledgeBase/Online/Common/Documents/API_Commands.pdf) | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Ta | `ParamTAbsence` | Duration of inactivity before absence | Die Dauer der Inaktivität, nach der das Gebäude als unbesetzt gilt. Sobald diese Zeit ohne neue Aktivität verstrichen ist, gibt der Ausgang "Absent" einen Impuls aus. | ≥ 0 h | – |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 546
+
+---
+
+### Visualisierungs-Präsenz (`Presence`)
+
+Dieser Baustein kann in Verbindung mit der Loxone Desktop-App als Computer-Präsenzmelder verwendet werden.
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Tr | `InputTrigger` | Trigger | Trigger | – |
+| R | `Reset` | Reset | Reset | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Q | `Q` | – | Digitaler Ausgang | – |
+| API | `OutputAPI` | API Connector | Intelligenter API basierter Verbinder. Kann verschiedene Funktionen zwischen Geräten und Bausteinen verknüpfen. API Commands (http://updatefiles.loxone.com/KnowledgeBase/Online/Common/Documents/API_Commands.pdf) | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Rem | `Remanence` | Remanence input | Remanenzeingang: Wenn aktiv, behält der Baustein seinen letzten Zustand nach einem Miniserver-Neustart. Der Zustand des Bausteins wird gespeichert: – Beim Speichern in den Miniserver – Bei einem geplanten Neustart – Vor einem Backup – Einmal pro Stunde Die Daten werden auf der SD gespeichert. | – | – |
+| T | `Time` | Delay duration | Dauer Verzögerung | ≥ 10 s | 900 |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 376 · KB: https://www.loxone.com/help/Presence
+
+---
+
+### Präsenzmelder (veraltet) (`PresenceController`)
+
+Präsenzmelder (veraltet)
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Mo | `Mv` | Presence or motion sensor input | Digitaler Eingang für externe Präsenz- oder Bewegungsmelder | – |
+| Idw | `W` | Door and window contact | Digitaler Eingang für Tür- und Fensterkontakte | – |
+| Ic | `C` | User defined | Digitaler Eingang Benutzerspezifisch | – |
+| Lon | `Li` | Lights on | Analoger Eingang aktuelle Lichtszene | ∞ |
+| Mu | `Mu` | Music | Digitaler Eingang Impuls Musik | – |
+| P | `P` | Power | Analoger Eingang für aktuelle Leistung [kW] | ∞ |
+| CO2 | `CO2` | CO2 | Analoger Eingang für aktuellen CO2 Wert [ppm] | ∞ |
+| T5 | `Gesture` | Pulse combined button input | Impuls Kombinierter Tasteneingang | ∞ |
+| R | `Reset` | Reset | Reset | – |
+| API | `OutputAPI` | API Connector | Intelligenter API basierter Verbinder. Kann verschiedene Funktionen zwischen Geräten und Bausteinen verknüpfen. API Commands (http://updatefiles.loxone.com/KnowledgeBase/Online/Common/Documents/API_Commands.pdf) | – |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| Q | `PA` | – | Digitaler Ausgang Präsenz erkannt | – |
+| AQ | `AQ` | – | Anzahl aktiver Eingänge | ∞ |
+| TQ | `TQ` | – | Textausgang letzter Melder | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Rem | `Remanence` | Remanence input | Remanenzeingang: Wenn aktiv, behält der Baustein seinen letzten Zustand nach einem Miniserver-Neustart. Der Zustand des Bausteins wird gespeichert: – Beim Speichern in den Miniserver – Bei einem geplanten Neustart – Vor einem Backup – Einmal pro Stunde Die Daten werden auf der SD gespeichert. | – | – |
+| T | `TVi` | Duration by which presence is extended when enabled through UI | Dauer [s] Verlängerung nach fallender Flanke bei Aktivierung über die Visualisierung | ∞ | 60 |
+| TMv | `TMv` | Duration by which pulses from motion sensors are extended in seconds | Dauer [s] Verlängerung nach fallender Flanke des Eingangs Präsenz | ∞ | 60 |
+| TW | `TW` | Input pulse extension door/window contact | Dauer [s] Verlängerung nach fallender oder steigender Flanke des Eingangs Tür- oder Fensterkontakte | ∞ | 60 |
+| TC | `TC` | Duration by which pulses on the user defined input are extended in seconds | Dauer [s] Verlängerung nach fallender Flanke des Eingangs für den benutzerdefinierten Eingang | ∞ | 60 |
+| TL | `TL` | Duration by which signal on the lighting input is extended in seconds | Dauer [s] Verlängerung nach erster steigender Flanke des Eingangs für Licht | ∞ | 60 |
+| TM | `TM` | Duration by which signal on the music input is extended in seconds | Dauer [s] Verlängerung nach erster steigender Flanke des Eingangs für Musik | ∞ | 60 |
+| TP | `TP` | Duration by which signal on the power input is extended in seconds | Dauer [s] Verlängerung des analogen Eingangs Leistung, falls dieser unter den Schwellwert fällt | ∞ | 60 |
+| TCO | `TCO` | Parameter - Duration by which signal on the CO2 input is extended in seconds | Dauer [s] Verlängerung des analogen Eingangs CO2, falls dieser unter den Schwellwert fällt | ∞ | 60 |
+| TT | `TT` | Extension duration of the T5 input | Verlängerung des Eingangsimpulses nach erster steigender Flanke für T5 | ∞ | 60 |
+| Sp | `dP` | Power Threshold | Schwelle Leistung [kW], ab welcher der Eingang P berücksichtigt wird | ∞ | 0,1 |
+| Dc | `dC` | CO2 threshold | Schwelle CO2 [ppm], ab welcher der Eingang CO2 berücksichtigt wird | ∞ | 500 |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 477
+
+---

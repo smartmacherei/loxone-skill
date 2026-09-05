@@ -70,6 +70,11 @@ Quelle: https://www.loxone.com/dede/kb/raumlueftungssteuerung/
 - **Parameter Fpt (Frostschutz):** "Wird keine Außentemperatur gemessen, ist diese Sicherheitsfunktion nicht funktionsfähig!"
 - **Eigenschaft Abluft-/Zuluftbetrieb:** "Falls sich Raumluftabhängige Feuerstellen im Einflussbereich des Lüfters befinden, kann ein Unterdruck Rauchqualm in den Wohnraum ziehen!"
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Hmin | `IN_H_MIN` | Parameter | Minimum Humidity [%] | Grenzwert minimale Luftfeuchtigkeit: Baustein versucht durch geeignete Regelung die Innenluftfeute über diesem Wert zu halten. | 0…100 % |
+
 ---
 
 ## 2. WC-Lüftungssteuerung
@@ -247,6 +252,11 @@ Quelle: https://www.loxone.com/dede/kb/internorm-luefter/
 
 - **Eingang Ex (Exhaust air):** "ACHTUNG: Dieser Eingang kann nur verwendet werden, wenn die Bausteineigenschaft "Abluft-/Zuluftbetrieb erlaubt" aktiviert ist."
 - **Eigenschaft Abluft-/Zuluftbetrieb:** "ACHTUNG: Falls sich Raumluftabhängige Feuerstellen im Einflussbereich des Lüfters befinden, kann ein Unterdruck Rauchqualm in den Wohnraum ziehen!"
+
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Hmin | `IN_H_MIN` | Parameter | Minimum Humidity [%] | Grenzwert minimale Luftfeuchtigkeit: Baustein versucht durch geeignete Regelung die Innenluftfeute über diesem Wert zu halten. | 0…100 % |
 
 ---
 
@@ -576,6 +586,13 @@ Quelle: https://www.loxone.com/dede/kb/klimaanlagen-zentralsteuerung/
 
 Keine expliziten Warnhinweise oder Achtung-Boxen dokumentiert.
 
+**Weitere Konnektoren laut TechDoc** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Art | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|---|
+| Cm | `MaintenanceAck` | Eingang | Confirm Maintenance | Ausgang (M) zurücksetzen und Wartungsintervall neu starten | – |
+| M | `OutMaintenance` | Ausgang | Maintenance | Ein, wenn (Dfc) abgelaufen ist. | – |
+| Dm | `TimeMaintenance` | Parameter | Maintenance Interval | Wartungsintervall. 0 = Deaktiviert. Wenn das Intervall abgelaufen ist, wird der Ausgang (M) auf EIN gesetzt, bis die Wartung mit dem Eingang (Tm) bestätigt wird. | ∞ $$STRING::DAYS$$ |
+
 ---
 
 ## Zusammenfassung
@@ -587,3 +604,73 @@ Keine expliziten Warnhinweise oder Achtung-Boxen dokumentiert.
 Alle 9 Bausteine wurden vollständig recherchiert und dokumentiert. Alle Tabellen (Eingänge, Ausgänge, Parameter, Eigenschaften) wurden wörtlich aus der offiziellen Loxone-Dokumentation übernommen und entsprechend mit [BELEGT] gekennzeichnet. Fallstricke und Warnhinweise wurden vollständig erfasst. Spezielle Kürzel mit Sonderzeichen (wie ϑ) wurden exakt beibehalten.
 
 **Stand:** 30.07.2026
+
+---
+
+## Aus der TechDoc ergänzt
+
+Stand 05.09.2026, Loxone Config 17.1.6.30. Diese Bausteine haben keine eigene Seite in der KB-Kategorie „Funktionsbausteine"; Ein-/Ausgänge und Parameter stammen aus der maschinenlesbaren Bausteindoku des Config-Pakets ([techdoc-lxres.md](techdoc-lxres.md)), Kennzeichnung `[BELEGT-TECHDOC]`. Eigenschaften und Fallstricke kennt die TechDoc nicht. Erzeugt von `scripts/techdoc_katalog.py` — nicht von Hand bearbeiten, sondern das Skript nach einem Config-Update erneut laufen lassen.
+
+### Lüftersteuerung (veraltet) (`Fan`)
+
+Lüftersteuerung (veraltet) Dieser Baustein wird nicht mehr weiterentwickelt.
+
+**Eingänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| T | `TSoll` | Target temperature | Analoger Eingang gewünschte Solltemperatur [°] | ∞ |
+| AIo | `AIt1` | Off temperature | Analoger Eingang aktuelle Außentemperatur [°] | ∞ |
+| AIi | `AIt2` | Room temperature | Analoger Eingang aktuelle Raumtemperatur [°] | ∞ |
+| AIq | `VOC` | Air quality | Analoger Eingang aktuelle Luftgüte [ppm] | ∞ |
+| AIh1 | `AIh1` | Outside humidity | Analoger Eingang aktuelle relative Außenfeuchte [%] | ∞ |
+| AIh | `AIh2` | Room humidity | Analoger Eingang aktuelle relative Raumfeuchte [%] | ∞ |
+| Ip | `Ip` | Frost or overheat protection | Digitaler Eingang für Hitze oder Frostschutz | – |
+| Am | `FMode` | Fan mode | Analoger Eingang zur Auswahl des zu verwendenden Modus. Im manuellen Modus (1-3) wird die Lüftergeschwindigkeit von Sm verwendet. 0=Automatik 1=Alle Lüfter werden manuell betrieben 2=Der Lüfter wird nur im Zuluftmodus betrieben (manueller Modus) 3=Der Lüfter wird nur im Abluftmodus betrieben (manueller Modus) | ∞ |
+| In | `NMode` | Night mode input | Legt fest, ob der Nachtmodus aktiv ist. | – |
+| R | `Inactive` | Reset | Deaktiviert den Lüfter, solange auf Ein. | – |
+| Is | `Noise` | Noise reduction | Digitaler Eingang für Geräuschreduzierung durch Limitierung der Lüfterdrehzahl lt. Parameter SMv solange aktiviert. | – |
+| Mo | `Mv` | Motion sensor | Digitaler Eingang Bewegungsmelder. | – |
+| DisMo | `DisMv` | Disable motion sensor input | Bewegungsmeldereingang deaktivieren | – |
+| T5 | `T5` | Combined button input | Bei Doppelklick wird die Entfeuchtung aktiviert, falls die Innenfeuchte zu hoch ist. | ∞ |
+| If | `If` | Filter change | Digitaler Eingang für nötigen Filterwechsel. | – |
+| Am2 | `AIm` | Operating mode | Auswahl des zu verwendenden Betriebsmodus. 0=Automatikbetrieb: Im Kalender steht „Heizperiode“ zur Verfügung. (Diese Einstellungen (Datum) entscheiden, ob der Winterbetriebsmodus aktiviert wird) 1=manueller Sommerbetrieb 2=manueller Winterbetrieb | ∞ |
+
+**Ausgänge** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich |
+|---|---|---|---|---|
+| AQs | `AQfs` | – | Analoger Ausgang Internorm Lüftergeschwindigkeit [%] | ∞ |
+| AQim | `AQim` | – | Analoger Ausgang Internorm Lüftermodus 0=Zu- und Abluft 1=Zuluft 2=Abluft | ∞ |
+| AQs1 | `AQfs1` | – | Analoger Ausgang Lüftergeschwindigkeit [%] Lüfter für Zuluft | ∞ |
+| AQs2 | `AQfs2` | – | Analoger Ausgang Lüftergeschwindigkeit [%] Lüfter für Abluft | ∞ |
+| AQhp | `AQhp` | – | Analoger Ausgang Klappenstellung [%] | ∞ |
+| Qf | `Qp` | – | Digitaler Ausgang Filter wechseln | – |
+| AQs | `AQs` | – | Analoger Ausgang Status 0=Lüfter aus 1=Lüfter manuell 2=Automatik (aktuell Temperatur) 3=Entfeuchtung aktiv 4=Automatik (aktuell Luftgüte) 5=Nachtmodus aktiv 6=geräuschreduzierter Betrieb 7=deaktiviert (Frost- oder Hitzeschutz) | ∞ |
+| AQh | `AQh` | – | Analoger Ausgang Wärmetauscher (0-100%) | ∞ |
+| AQmm | `AQmm` | – | Analoger Ausgang Modus (0=Aus, 1=Intervallbetrieb, 2=Querlüften A nach B, 3=Querlüften B nach A) | ∞ |
+| Qm | `Qm` | – | Digitaler Ausgang aktueller Betriebsmodus (AUS=Sommerbetrieb, EIN=Winterbetrieb). | – |
+| API | `OutputAPI` | API Connector | Intelligenter API basierter Verbinder. Kann verschiedene Funktionen zwischen Geräten und Bausteinen verknüpfen. API Commands (http://updatefiles.loxone.com/KnowledgeBase/Online/Common/Documents/API_Commands.pdf) | – |
+
+**Parameter** [BELEGT-TECHDOC]
+| Kürzel | XML-Name | Kurzbeschreibung | Beschreibung | Wertebereich | Standard |
+|---|---|---|---|---|---|
+| Rem | `Remanence` | Remanence input | Remanenzeingang: Wenn aktiv, behält der Baustein seinen letzten Zustand nach einem Miniserver-Neustart. Der Zustand des Bausteins wird gespeichert: – Beim Speichern in den Miniserver – Bei einem geplanten Neustart – Vor einem Backup – Einmal pro Stunde Die Daten werden auf der SD gespeichert. | – | – |
+| Tm | `Ti` | Duration[s] for which manual mode is active | Legt fest, wie lange [s] der manuelle Modus aktiv sein darf. 0 = manueller Modus wird nicht automatisch beendet. | ∞ | 900 |
+| Sn | `Fsn` | Fan speed [%] night mode | Legt die Geschwindigkeit [%] des Lüfters fest, während der Nachtmodus am Eingang In aktiviert ist. | ∞ | 50 |
+| Sm | `FanManu` | Fan speed manual modes | Legt die Geschwindigkeit [%] des Lüfters fest, während der manuelle Modus am Eingang Am aktiviert ist. | ∞ | 50 |
+| Ht | `Tq` | Target air quality | Zielwert Luftgüte in ppm | ∞ | 800 |
+| Hv | `HV` | Air quality hysteresis | Hysterese Luftgüte | ∞ | 100 |
+| TH | `MoveTimeout` | Extension after movement | Verlängerung nach Bewegung | ∞ | 100 |
+| SMv | `MoveMaxSpeed` | Noise reduction | Legt die maximale Lüftergeschwindigkeit [%] zur Geräuschreduzierung fest, während der Bewegungsmelder-Eingang Mv oder Is aktiv ist. | ∞ | 50 |
+| SMin | `MinSpeed` | Minimum fan speed | Legt die minimale Lüftergeschwindigkeit [%] fest, die der Lüfter nicht unterschreiten darf. | ∞ | 5 |
+| Td | `TWet` | Duration for de humidification | Legt die Entfeuchtungsdauer [s] fest, nachdem Präsenz beendet oder der Raum verlassen wurde (T5-Doppelklick). | ∞ | 1800 |
+| M | `DtT5` | Max time between pulses | Maximaler Zeitabstand zwischen 2 Impulsen des T5 Eingangs | ∞ | 0,35 |
+
+**Eigenschaften** [OFFEN]
+Nicht in der TechDoc enthalten — sie beschreibt nur Konnektoren.
+
+**Fallstricke** [OFFEN]
+Keine dokumentiert.
+
+Quelle: TechDoc `tdc_DEU.LxRes` (Loxone Config 17.1.6.30), ControlType 479 · KB: https://www.loxone.com/help/Fan
+
+---
