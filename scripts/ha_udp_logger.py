@@ -13,6 +13,13 @@ Verifiziert 05.09.2026 am Miniserver Gen 2, FW 17.1.6.30 (Demo-Koffer):
   * Ein Logger mit Adresse /dev/udp/<ip>/<port> sendet bei jeder Aenderung sofort ein UDP-Paket
     "<JJJJ-MM-TT hh:mm:ss>;<Logger-Titel>;<Meldungstext>\r\n" (Quellport = Zielport) und schreibt
     NICHT auf die SD-Karte. Broadcast-Adressen funktionieren.
+  * "<v>" rendert Analogwerte ohne Nachkommastellen ("40" bei 40.0 V-Eingang, "4" bei 4 Lx);
+    deshalb bekommen analoge Klemmen hier "<v.2>". Farbwerte (Unit "<v.col>") rendern als "0".
+    Analoge Eingaenge melden auch Rauschen unterhalb der Anzeigeaufloesung (ein unbelegter
+    0-10-V-Eingang lieferte ~1 Paket/s) - der Empfaenger muss gleiche Werte verwerfen.
+  * Unverdrahtete Ausgaenge (Co K="I" ohne <In>) lassen sich nicht melden: der eigene I-Konnektor
+    taugt nicht als Quelle (getestet, kein Paket). Beim Programmstart kommt kein Gesamtabbild,
+    nur die Klemmen, deren Wert sich beim Start aendert - Startwerte weiter per HTTP holen.
 
 Aufruf (Programm zuerst aus dem Miniserver ziehen - nie aus einer alten lokalen Datei):
     py -3 ha_udp_logger.py sps_0272_<ts>.zip --target 192.168.0.223:55555 -o sps_new.zip
@@ -198,7 +205,7 @@ def loxone_epoch_now():
 
 
 # ---------------------------------------------------------------- Kern
-def collect_terminals(xml: bytes, include_visu: bool, try_input_connector: bool):
+def collect_terminals(xml: bytes, include_visu: bool):
     """Liste (uuid, title, type, source_connector_uuid, analog) fuer alle meldbaren Klemmen."""
     root = ET.fromstring(xml)
     out, skipped = [], []
@@ -226,8 +233,6 @@ def collect_terminals(xml: bytes, include_visu: bool, try_input_connector: bool)
             analog = ty in ANALOG_OUT_TYPES
             if ins:
                 src = ins[0].get("Input")   # was den Ausgang speist
-            elif try_input_connector:
-                src = cos["I"].get("U")
         if not src:
             skipped.append((title, ty, "Ausgang ohne Quelle - nichts zu melden"))
             continue
@@ -235,8 +240,7 @@ def collect_terminals(xml: bytes, include_visu: bool, try_input_connector: bool)
     return out, skipped
 
 
-def build(xml: bytes, target: str, page_title: str, include_visu: bool, bc, bc_uuids: set,
-          try_input_connector: bool, replace: bool):
+def build(xml: bytes, target: str, page_title: str, include_visu: bool, bc, bc_uuids: set, replace: bool):
     t = xml.decode("utf-8")
     nl = "\r\n" if "\r\n" in t else "\n"
     suffix = DOC_SUFFIX_RE.search(t).group(1)
@@ -264,7 +268,7 @@ def build(xml: bytes, target: str, page_title: str, include_visu: bool, bc, bc_u
             ls = t.rfind(nl, 0, s)
             t = t[:ls] + t[e:]
 
-    terminals, skipped = collect_terminals(t.encode("utf-8"), include_visu, try_input_connector)
+    terminals, skipped = collect_terminals(t.encode("utf-8"), include_visu)
     if not terminals:
         raise SystemExit("keine meldbaren Klemmen gefunden")
 
@@ -308,7 +312,8 @@ def build(xml: bytes, target: str, page_title: str, include_visu: bool, bc, bc_u
             '%s<In Input="%s"/>' % (ind3, src),
             "%s</Co>" % ind2,
             '%s<Co K="AQ" U="%s"/>' % (ind2, uuid("01ff", tail)),
-            '%s<LoggerMailer RefLogger="%s" On="%s;&lt;v&gt;" Off="%s;&lt;v&gt;" MinimumTime="0"/>' % (ind2, ref, u, u),
+            '%s<LoggerMailer RefLogger="%s" On="%s;&lt;v%s&gt;" Off="%s;&lt;v%s&gt;" MinimumTime="0"/>'
+            % (ind2, ref, u, ".2" if analog else "", u, ".2" if analog else ""),
             "%s</C>" % ind1,
         ]
     page.append("%s</C>" % pindent)
@@ -336,8 +341,6 @@ def main():
     ap.add_argument("--broadcast-uuids", default="", help="Klemmen-UUIDs (Komma), die an den Broadcast-Logger gehen")
     ap.add_argument("--title", default="HA UDP", help="Titel von Seite und Logger")
     ap.add_argument("--include-visu", action="store_true", help="auch Klemmen mit Visu-Haekchen melden")
-    ap.add_argument("--try-input-connector", action="store_true",
-                    help="Experiment: unverdrahtete Ausgaenge ueber ihren I-Konnektor")
     ap.add_argument("--replace", action="store_true", help="vorhandene Seite/Logger gleichen Titels ersetzen")
     ap.add_argument("-o", "--out", required=True, help="Ziel: .zip (fuer den Miniserver), .Loxone oder .xml")
     ap.add_argument("--upload", action="store_true", help="Ergebnis-ZIP per FTP als /prog/sps_new.zip ablegen")
@@ -370,7 +373,7 @@ def main():
 
     bc_uuids = {u.strip().lower() for u in args.broadcast_uuids.split(",") if u.strip()}
     out_xml, terminals, skipped, date_str, u_log = build(
-        xml, args.target, args.title, args.include_visu, args.broadcast, bc_uuids, args.try_input_connector, args.replace)
+        xml, args.target, args.title, args.include_visu, args.broadcast, bc_uuids, args.replace)
     print("%d Klemmen gemeldet, %d uebersprungen; Logger %s; Programmdatum %s" % (len(terminals), len(skipped), u_log, date_str))
     for title, ty, why in skipped:
         print("  - %-32s %-14s %s" % (title, ty, why))

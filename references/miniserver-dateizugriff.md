@@ -190,8 +190,20 @@ Kürzer als ein SPS-Zyklus geht nicht — das ist keine Logger-, sondern eine SP
 Ein Seitenobjekt darf einen Peripherie-Konnektor **direkt** referenzieren — genau so macht es
 Config beim `InputRef` (`AI <= Klemme.AQ`, `I <= Klemme.Q`).
 
-**Offen:** `MinimumTime` (Wirkung unbekannt, 0 und 5000 verhielten sich in den Tests gleich),
-Analogwert-Format von `<v>` und ob analoge Änderungen gedrosselt werden — Messung läuft.
+**Analogwerte** (gemessen mit 72 Klemmen-Referenzen, zweiter Lauf):
+
+| | |
+|---|---|
+| `<v>` | rendert **ohne Nachkommastellen**: 40,06 V → `40`, 3,42 Lx → `3`. Nicht das Anzeigeformat der Klemme (`<v.1>`), sondern gerundet |
+| `<v.2>` | zwei Nachkommastellen: `40.06`, `52.70`, `3.42` — Punkt als Dezimaltrenner, keine Einheit |
+| `<v.col>`-Ausgänge (RGBW) | `<v>` rendert `0`, auch bei laufender Farbänderung; die Änderung selbst löst aber jedes Mal ein Paket aus |
+| Drosselung | **keine.** Jede Rohwertänderung sendet — ein unbelegter 0-10-V-Eingang pendelte zwischen `40.00` und `40.06` und lieferte damit rund **ein Paket je Sekunde** ohne sichtbare Änderung in `<v>`. Empfänger müssen gleiche Werte verwerfen |
+| Programmstart | **kein Gesamtabbild** — nur Klemmen, deren Wert sich beim Start ändert (4 von 72). Startwerte weiter per HTTP `jdev/sps/io/<uuid>` holen |
+| `255.255.255.255` als Ziel | **funktioniert** (Limited Broadcast, `tcpdump`: `192.168.0.186.55556 > 255.255.255.255.55556`). Damit überlebt der Logger einen Subnetzwechsel von Miniserver und Empfänger |
+| Unverdrahteter Ausgang über seinen eigenen `I`-Konnektor als Quelle | **sendet nichts** — Eingangskonnektoren taugen nicht als `<In Input>`-Quelle |
+
+**Offen:** `MinimumTime` — 0 und 5000 verhielten sich in den Tests gleich; mutmaßlich die
+Entprellzeit, mit der Config Anrufe (Caller) belegt.
 
 **Recherchiert 05.09.2026, damit es niemand ein zweites Mal sucht:**
 
