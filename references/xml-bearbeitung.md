@@ -187,6 +187,11 @@ Nie parallel.
 * **`Nio`** = Anzahl der `Co`-Elemente. Muss stimmen.
 * **`U`-Schema:** Objekt-UUIDs enden auf das **Dokument-Suffix** (z. B. `ffff949738c6754e`),
   Konnektor-UUIDs auf ein **objekt-eigenes Suffix**. Muss projektweit eindeutig sein.
+  **Loxone-UUIDs haben 35 Zeichen (8-4-4-16), nicht 36** — `{36}`-Regexe und UUID-Bibliotheken
+  finden nichts. Das erste Feld ist die Anlegezeit in Sekunden seit 2009-01-01 00:00 UTC (derselbe
+  Zähler wie `Document/@DateS`), die beiden mittleren sind Laufnummern. Für skripterzeugte Objekte
+  reicht: aktuelle Loxone-Sekunde als erstes Feld, Zähler, Dokument-Suffix — und gegen alle
+  vorhandenen `U="…"` prüfen (verifiziert 05.09.2026, `scripts/ha_udp_logger.py`).
 * **Verbindungen** laufen ausschließlich über `<In Input="…"/>` mit der **Konnektor**-UUID der Quelle.
 * **`IoData`** fehlt bei reinen Logikbausteinen (z. B. `2Point`) — die haben dann weder Raum noch Kategorie.
 * Verbindungen gelten **innerhalb einer Programmseite**. Seitenübergreifend braucht es

@@ -138,7 +138,7 @@ statt Attributen. Ein Scanner, der nur Attribute kennt, bricht dort ab.
 | [references/zentralfunktionen.md](references/zentralfunktionen.md) | Die 20 Komfortfunktionen, Zentralbausteine, Klimasteuerung, Sturm-/Frostschutz |
 | [references/programmier-bausteine.md](references/programmier-bausteine.md) | **Ablaufsteuerung + Programm (PicoC)** — wann welches Werkzeug, XML-Aufbau, Befehls- und PicoC-Funktionsreferenz, Zeilenumbruch-Falle |
 | [references/mcp-server.md](references/mcp-server.md) | **MCP-Server auf dem Miniserver** (ab Config 17.1.6, nur Gen 2) — Einrichtung in der Netzwerkperipherie, OAuth statt Basic-Auth, Claude-Anbindung, Community-Bridges als Fallback |
-| [references/miniserver-dateizugriff.md](references/miniserver-dateizugriff.md) | **Programm im Miniserver lesen und schreiben** — HTTP kann nur lesen, FTP schreibt; LoxCC-Format samt CRC32; was der WebSocket pusht und was nicht |
+| [references/miniserver-dateizugriff.md](references/miniserver-dateizugriff.md) | **Programm im Miniserver lesen und schreiben** — HTTP kann nur lesen, FTP schreibt; LoxCC-Format samt CRC32; **Upload wie Config: `/prog/sps_new.zip` + `dev/sps/restart`** (verifiziert); was der WebSocket pusht und was nicht; **Klemmen per Logger-UDP in Echtzeit melden** (`OutputRefLM`, Skript `scripts/ha_udp_logger.py`) |
 | [references/techdoc-lxres.md](references/techdoc-lxres.md) | **Offizielle Bausteindoku als XML aus dem Config-Paket** — 220 typisierte Bausteine mit XML-Konnektorname, Doku-Kürzel, Einheit, Bereich, Vorgabe; Decoder `scripts/decode_lxres.py`, Abgleich `scripts/techdoc_abgleich.py` → [techdoc-abgleich.md](references/techdoc-abgleich.md); kommt mit jedem Config-Update mit |
 
 ### Baustein-Katalog — alle 179 Bausteine der offiziellen KB
@@ -213,6 +213,8 @@ Maschinenlesbare Bausteindoku (alle Bausteine, offiziell): `C:\ProgramData\Loxon
 | Gatterlogik, Ablaufsteuerung oder PicoC? | *Bedingungen* → Gatter · *Abläufe* → Ablaufsteuerung · *Fremdformate* → PicoC. [programmier-bausteine.md](references/programmier-bausteine.md) |
 | PicoC: welcher Index ist Eingang I1? | `getinput(0)`. 0-basiert, Text- und Analogkanäle getrennt |
 | Sequenztext / Programmcode im XML | `SequenceController` → `<SEQ CFG="…">` · `Code16` → Attribut `Code` |
+| Klemme **ohne Visu** in Echtzeit nach außen (HA, MQTT-Bridge …) | Logger-Objekt `Address="/dev/udp/<ip>/<port>"` **plus** je Klemme ein `OutputRefLM` auf einer Seite, `AI` vom `Q`/`AQ` der Klemme. **`LoggerMailer` direkt an der Klemme tut nichts.** 12–20 ms Latenz, Broadcast erlaubt — `py -3 scripts/ha_udp_logger.py`, [miniserver-dateizugriff.md](references/miniserver-dateizugriff.md) 4a |
+| Programm ohne Config in den Miniserver | FTP `STOR /prog/sps_new.zip`, dann `GET /jdev/sps/restart` — genau Configs Weg. Vorher `sps_*.zip` aus `/prog` ziehen, `NumO` und `Date`/`DateS` setzen — [miniserver-dateizugriff.md](references/miniserver-dateizugriff.md) 5 |
 
 **XML-Typname ≠ GUI-Name.** Diese sechs führen zuverlässig in die Irre:
 `PushButton` ist der **Schalter** (nicht der Taster) · `PulseAt` ist **Impuls um** (Zeitpunkt,
