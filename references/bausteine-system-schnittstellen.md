@@ -272,6 +272,57 @@ BACnet-Server auf aktuellen Miniserver-Generationen. Ermöglicht Kommunikation m
 | Passwort | Passwort, das für den BACnet-Befehl 'Reinitialize Device' verwendet wird. Ist kein Passwort vorhanden, wird der Befehl nicht zugelassen. | - | - |
 | Instanznummer | BACnet-Instanznummer, die der Miniserver im BACnet-Netzwerk verwendet. | ∞ | 0 |
 
+### XML — so schreibt Config den BACnet-Server [VERIFIZIERT 05.09.2026]
+
+Angelegt in Config 17.2.8.28 (F5 → „BACnet"), aus dem Miniserver zurückgelesen. Der Server hängt in
+der Netzwerkperipherie (`WeatherCaption` „Netzwerkperipherie"), seine Objekte in zwei Captions:
+
+```xml
+<C Type="BACnetDevice" V="178" U="…" Title="BACnet" WF="16384" Port="47808" IPv6="false">
+  <HP H="" Suh="true" Unh="" Sc="-2" S="" Alg="1"/>            <!-- Passwort für Reinitialize Device (Hash) -->
+  <C Type="SensorCaption" V="178" U="…" Title="Eingänge" WF="16384">
+    <C Type="BACnetSensor" IName="BI1" V="178" U="…" Title="BO 1" Nio="2" WF="16400" ValOT="1" MinTime="10" Idx="1">
+      <Co K="Q" U="…"/><Co K="Qe" U="…"/>                        <!-- Miniserver-Eingang = BACnet binary-output,1 -->
+      <IoData Cr="…" Pr="…" St="2"/><Display Unit="&lt;v&gt;" StateOnly="true"/>
+    </C>
+  </C>
+  <C Type="ActorCaption" V="178" U="…" Title="Ausgänge" WF="16384">
+    <C Type="BACnetActor" IName="BQ1" V="178" U="…" Title="BI 1" Nio="1" WF="16400" Idx="1">
+      <Co K="I" Nc="1" U="…"><In Input="…"/></Co>                 <!-- Miniserver-Ausgang = BACnet binary-input,1 -->
+      <IoData Cr="…" Pr="…" St="2"/><Display Unit="&lt;v.1&gt;" StateOnly="true"/>
+    </C>
+  </C>
+</C>
+```
+
+| Objekt in Config (TechDoc ControlType) | XML-Typ | `IName` | BACnet-Objekt |
+|---|---|---|---|
+| Digitaler Eingang (212) | `BACnetSensor` | `BI<n>` | `binary-output,<Idx>` — der BACnet-Client **schreibt** |
+| Analoger Eingang (213) | `BACnetAsensor` | `AI<n>` [ABGELEITET] | `analog-output,<Idx>` |
+| Digitaler Ausgang (214) | `BACnetActor` | `BQ<n>` | `binary-input,<Idx>` — der BACnet-Client **liest** |
+| Analoger Ausgang (215) | `BACnetAactor` | `AQ<n>` [ABGELEITET] | `analog-input,<Idx>` |
+
+Die Instanznummer des Servers (`Instanznummer`, Standard 0) schreibt Config bei 0 gar nicht ins XML;
+ein früherer Skriptversuch mit `Pt="47808" InNum="4711"` und Kindern ohne Captions **startete den
+Server nicht**. Attributnamen also nicht raten: `Port`, `IPv6`, `<HP>`, `SensorCaption`/`ActorCaption`.
+
+### Am Miniserver sichtbar [VERIFIZIERT 05.09.2026]
+
+Gemessen mit rohen BACnet/IP-Paketen von einem Rechner im selben Netz
+(`scripts/bacnet_probe.py`, YABE-Ersatz ohne Adminrechte), Miniserver Gen 2, FW 17.2.8.28:
+
+| | |
+|---|---|
+| Who-Is (Broadcast und Unicast) | I-Am `device,0`, Vendor 1228 „Loxone Electronics GmbH", Modell „Loxone Miniserver", Firmware = Miniserver-Version, Protocol-Revision 19, max. APDU 1476, **keine Segmentierung** |
+| Objektliste | **nur die angelegten Objekte** (`binary-input,1` „BI 1", `binary-output,1` „BO 1") plus `device,0` und `network-port,56`. **Keine Klemme, kein Baustein wird von sich aus freigegeben** — jeder Wert braucht ein eigenes BACnet-Objekt und dessen Verdrahtung, derselbe Aufwand wie beim Logger |
+| Eigenschaften je Objekt | `object-name`, `present-value`, `polarity`, `status-flags`, `out-of-service`. **Nicht vorhanden** (`unknown-property`): `description`, `units`, `active-text`, `inactive-text`, `cov-increment` |
+| Dienste | subscribeCOV, subscribeCOVProperty, readProperty, readPropertyMultiple, writeProperty, writePropertyMultiple, reinitializeDevice, who-Is, who-Has |
+| WriteProperty `binary-output,1` = active (Priorität 8) | SimpleACK; der Miniserver-Eingang steht **< 300 ms** später auf 1, `NULL` gibt die Priorität frei |
+| SubscribeCOV `binary-input,1` (unbestätigt, 120 s) | SimpleACK, **sofort eine Erstmeldung mit dem aktuellen Wert**, danach bei jeder Änderung des Miniserver-Ausgangs die **COV-Benachrichtigung 2–3 ms** nach dem Schaltbefehl (`present-value` + `status-flags`) — BACnet ist damit ein Push-Kanal, aber nur für freigegebene Objekte. Abo ohne Lifetime = Abmelden |
+
+Der Server läuft mit der `Instanznummer` 0 — mehrere Miniserver im selben Netz brauchen eigene
+Nummern, sonst kollidieren die Device-IDs.
+
 ### Fallstricke
 
 [BELEGT] https://www.loxone.com/dede/kb/bacnet/

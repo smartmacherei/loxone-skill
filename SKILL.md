@@ -223,6 +223,7 @@ Maschinenlesbare Bausteindoku (alle Bausteine, offiziell): `C:\ProgramData\Loxon
 | Sequenztext / Programmcode im XML | `SequenceController` → `<SEQ CFG="…">` · `Code16` → Attribut `Code` |
 | Klemme **ohne Visu** in Echtzeit nach außen (HA, MQTT-Bridge …) | Logger-Objekt `Address="/dev/udp/<ip>/<port>"` **plus** je Klemme ein `OutputRefLM` auf einer Seite, `AI` vom `Q`/`AQ` der Klemme. **`LoggerMailer` direkt an der Klemme tut nichts.** 12–20 ms Latenz, Broadcast erlaubt — `py -3 scripts/ha_udp_logger.py`, [miniserver-dateizugriff.md](references/miniserver-dateizugriff.md) 4a |
 | Programm ohne Config in den Miniserver | FTP `STOR /prog/sps_new.zip`, dann `GET /jdev/sps/restart` — genau Configs Weg. Vorher `sps_*.zip` aus `/prog` ziehen, `NumO` und `Date`/`DateS` setzen — [miniserver-dateizugriff.md](references/miniserver-dateizugriff.md) 5 |
+| Werte per BACnet freigeben | **Nichts ist automatisch sichtbar.** Je Wert ein Objekt unter `BACnetDevice` → `ActorCaption` (`BACnetActor` = `binary-input`, Miniserver-Ausgang) bzw. `SensorCaption` (`BACnetSensor` = `binary-output`, schreibbar). `subscribeCOV` pusht in 2–3 ms. XML-Vorlage und Messwerte: [bausteine-system-schnittstellen.md](references/bausteine-system-schnittstellen.md) BACnet; Prüfen ohne YABE: `py -3 scripts/bacnet_probe.py <ip>` |
 
 **XML-Typname ≠ GUI-Name.** Diese sechs führen zuverlässig in die Irre:
 `PushButton` ist der **Schalter** (nicht der Taster) · `PulseAt` ist **Impuls um** (Zeitpunkt,

@@ -21,6 +21,19 @@ bei dem Loxone Config die erzeugte Datei geladen, migriert und zurückgeschriebe
 | Selbstschließende Tags | `<X/>` — **ohne** Leerzeichen vor dem Slash |
 | Wurzel | `<ControlList Version="273" LxAV="86" NextObj="…" …>` |
 
+Versionsstände, wie sie in Dateien auftauchen (verifiziert an eigenen Projekten):
+
+| Config / Firmware | `ControlList/@Version` | `LxAV` | Objekt-`V` | `Document/@ConfigVersion` |
+|---|---|---|---|---|
+| 17.1.6.30 | 272 | 86 | 175 | 17010630 |
+| 17.1.7.27 | 273 | 86 | 175 | — |
+| 17.2.8.28 (Alpha, 05.09.2026) | 274 | 87 | 178 | 17020828 |
+
+Config hebt beim Öffnen ältere Stände selbst an (`V` 175 → 178 in einem Schritt, auch an
+skripterzeugten Objekten). **Achtung:** Loxone Config Alpha 17.2.8.28 hat den Demo-Miniserver beim
+„In Miniserver speichern" **ungefragt per Zwangsupdate** auf 17.2.8.28 gehoben (`def.log`:
+`Update Miniserver … (force)`).
+
 ### PowerShell-Rezept zum verlustfreien Zurückschreiben
 `XmlWriter` schreibt `<X />` statt `<X/>`. Nur am Zeilenende normalisieren — sonst identisch:
 

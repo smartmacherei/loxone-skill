@@ -20,6 +20,10 @@ Verifiziert 05.09.2026 am Miniserver Gen 2, FW 17.1.6.30 (Demo-Koffer):
   * Unverdrahtete Ausgaenge (Co K="I" ohne <In>) lassen sich nicht melden: der eigene I-Konnektor
     taugt nicht als Quelle (getestet, kein Paket). Beim Programmstart kommt kein Gesamtabbild,
     nur die Klemmen, deren Wert sich beim Start aendert - Startwerte weiter per HTTP holen.
+  * Config-Roundtrip verifiziert (17.2.8.28): "Aus Miniserver laden" -> "In Miniserver speichern"
+    behaelt Seite, Referenzen und Logger; Config migriert V=175 -> 178, setzt WF neu und laesst
+    MinimumTime="0" weg. Vor dem naechsten Lauf des Skripts das Programm wieder aus dem
+    Miniserver ziehen (--from-miniserver), nie eine aeltere lokale Datei nehmen.
 
 Aufruf (Programm zuerst aus dem Miniserver ziehen - nie aus einer alten lokalen Datei):
     py -3 ha_udp_logger.py sps_0272_<ts>.zip --target 192.168.0.223:55555 -o sps_new.zip
