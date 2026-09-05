@@ -76,6 +76,15 @@ IOGroups: 234 Input, 280 Output, 174 Parameter; 86 `AutoDesigner`-Blöcke.
   TechDoc sagt, *wie* ein Konnektor heißt, die Vorlage sagt, *welche* im XML stehen.
 - **Kein Attributname für Baustein-Eigenschaften** (`Wap`, `TimeEnd`, `Dir` …). Parameter mit
   Konnektor stehen drin, Eigenschaften aus dem Eigenschaftenfenster nicht durchgängig.
+  **Beispiel BACnet (05.09.2026):** Die TechDoc kennt den Server (ControlType 211) nur mit Name,
+  Beschreibung und Link — ohne `LxType`, ohne Port, Instanznummer oder IPv6 (die Wörter kommen
+  in der ganzen Datei nicht vor). Die vier Objektarten 212–215 liefern nur ihre Konnektoren
+  (`Q`/`Qe` bzw. `I`) und über `Format="BO %d"` die BACnet-Zuordnung. Den XML-Typ
+  `BACnetDevice`, die Attribute `Port`/`IPv6`, das `<HP>`-Element und die Captions
+  `SensorCaption`/`ActorCaption` gibt es **nur** in Config selbst. Die Stringtabelle der
+  `LoxoneConfig.exe` nennt Kandidaten (`InNum`, `IPv6`, `FdAdr`…), aber weder vollständig noch
+  mit Struktur — ein daraus geratenes Objekt lief nicht. Für Peripherie-Objekte bleibt es bei
+  Falle 3: einmal in Config anlegen und diffen.
 - `ShortDescription` ist im deutschen Paket teils **englisch**; `Name` und `Description` sind
   übersetzt. Wer deutsche Kürzel-Beschreibungen braucht, nimmt `Description`.
 - Kein Zusammenhang zu `FactoryPresets.xml` — die Auto-Konfiguration-Raumvorlagen bleiben dort.
