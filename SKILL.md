@@ -41,6 +41,8 @@ Im Zweifel prüfen, welchen Konnektor bestehende, funktionierende Verbindungen i
 Typname, Konnektorsatz und `Nio` sind nicht ableitbar. Quellen für Vorlagen, in dieser Reihenfolge:
 das Projekt selbst → `C:\ProgramData\Loxone\Loxone Config <Ver>\Templates\FactoryPresets.xml`
 (enthält nur Raum-Bausteine) → sonst: **einmal in Config einfügen lassen**, dann als Muster nutzen.
+**Konnektornamen** (nicht den Satz, nicht `Nio`) liefert seit 05.09.2026 die TechDoc aus dem
+Config-Paket — [techdoc-lxres.md](references/techdoc-lxres.md).
 Aus FactoryPresets entnommene Bausteine tragen eine ältere `V`-Nummer — **Config migriert sie beim
 Öffnen selbst** (verifiziert: Nio 40 → 57 bei der Raumregelung).
 
@@ -137,6 +139,7 @@ statt Attributen. Ein Scanner, der nur Attribute kennt, bricht dort ab.
 | [references/programmier-bausteine.md](references/programmier-bausteine.md) | **Ablaufsteuerung + Programm (PicoC)** — wann welches Werkzeug, XML-Aufbau, Befehls- und PicoC-Funktionsreferenz, Zeilenumbruch-Falle |
 | [references/mcp-server.md](references/mcp-server.md) | **MCP-Server auf dem Miniserver** (ab Config 17.1.6, nur Gen 2) — Einrichtung in der Netzwerkperipherie, OAuth statt Basic-Auth, Claude-Anbindung, Community-Bridges als Fallback |
 | [references/miniserver-dateizugriff.md](references/miniserver-dateizugriff.md) | **Programm im Miniserver lesen und schreiben** — HTTP kann nur lesen, FTP schreibt; LoxCC-Format samt CRC32; was der WebSocket pusht und was nicht |
+| [references/techdoc-lxres.md](references/techdoc-lxres.md) | **Offizielle Bausteindoku als XML aus dem Config-Paket** — 220 typisierte Bausteine mit XML-Konnektorname, Doku-Kürzel, Einheit, Bereich, Vorgabe; Decoder `scripts/decode_lxres.py`; kommt mit jedem Config-Update mit |
 
 ### Baustein-Katalog — alle 179 Bausteine der offiziellen KB
 
@@ -182,7 +185,8 @@ Jede Aussage im Katalog ist gekennzeichnet. Die Kennzeichnung ist Teil der Infor
 `[BELEGT]` gibt es nur für die offizielle KB. Die gesamte Datei `community-praxiswissen.md`
 ist `[COMMUNITY]`, auch wo eine Aussage plausibel klingt.
 
-Maschinenlesbare Bausteinvorlagen (falls vorhanden):
+Maschinenlesbare Bausteindoku (alle Bausteine, offiziell): `C:\ProgramData\Loxone\Loxone Config <Ver>\SDcard\sys\sys_DEU.zip`
+→ [techdoc-lxres.md](references/techdoc-lxres.md). Maschinenlesbare Bausteinvorlagen (falls vorhanden):
 `X:\Dokumente\Kunden\_Wissen\Loxone\Bausteinvorlagen.xml`
 
 ## Schnellzugriff
@@ -203,7 +207,7 @@ Maschinenlesbare Bausteinvorlagen (falls vorhanden):
 | Raumtyp `PType` | 1 Schlafraum · 2 Aufenthaltsraum · 3 Durchgangsraum |
 | Sonnenstandsautomatik läuft nicht | `Dir` = −1, GPS fehlt, oder „Sonnenschein" nicht aktiv |
 | Kästchen `Dwc: Raumregelung …` im Diagramm | **Verbindungs-Stub**, kein Objekt. Config zeichnet weit entfernte Baustein-Verbindungen so — auch auf derselben Seite. Der Text nennt den **Ziel**konnektor. Ein Referenzobjekt (`InputRef`/`OutputRef`) gibt es nur für Peripherie. |
-| Konnektor eines Bausteins gesucht | [xml-doku-mapping.md](references/xml-doku-mapping.md) — dort Typ suchen, nicht raten |
+| Konnektor eines Bausteins gesucht | `py -3 scripts/decode_lxres.py <sys_DEU.zip> --block <LxType>` — [techdoc-lxres.md](references/techdoc-lxres.md); für die 29 verifizierten Vorlagen zusätzlich [xml-doku-mapping.md](references/xml-doku-mapping.md). Nicht raten |
 | Doku-Kürzel → deutscher Klartext | der jeweilige `bausteine-*.md`-Katalog, Tabellen wörtlich |
 | Gatterlogik, Ablaufsteuerung oder PicoC? | *Bedingungen* → Gatter · *Abläufe* → Ablaufsteuerung · *Fremdformate* → PicoC. [programmier-bausteine.md](references/programmier-bausteine.md) |
 | PicoC: welcher Index ist Eingang I1? | `getinput(0)`. 0-basiert, Text- und Analogkanäle getrennt |

@@ -127,6 +127,25 @@ Die einzigen Auswege:
 2. **Zyklisch per HTTP nachziehen** — `/jdev/sps/io/<uuid>` je Klemme. Kostet wenig
    (gemessen: 65 Abfragen in 0,14 s, ~2 ms pro Anfrage), verpasst aber prinzipbedingt kurze
    Impulse zwischen zwei Abfragen.
+3. **Logger-Objekt mit UDP-Ziel** — *Miniserver → Meldungen → Logger*, Adresse
+   `/dev/udp/<HA-IP>/<Port>`; jeder Klemme in „Logging/Mail/Call/Track" einen Meldungstext
+   geben, `<v>` ist der Wert. Sendet **bei jeder Änderung sofort**, erscheint **nicht** in der
+   App, und **schreibt nicht auf die SD-Karte** — laut KB ist das UDP-Ziel eine *Alternative*
+   zur Datei `/log/user.log`, nicht ein Zusatz. Das ist etwas anderes als „Statistik" (Häkchen
+   am Objekt, schreibt zyklisch auf die SD). **[BELEGT]** KB „Logger"; Meldungsformat und
+   Analog-Drosselung **[OFFEN]**, am Koffer zu messen. Der XML-Attributname der
+   Logger-Zuweisung an einer Klemme ist **[OFFEN]** — einmal in Config anlegen und diffen.
+
+**Recherchiert 05.09.2026, damit es niemand ein zweites Mal sucht:**
+
+| Weg | Befund |
+|---|---|
+| MQTT-Client (ab 15.3, Gen 2) | 16 Subscriptions, 16 Publish, Auswertung alle 2 s. Changelog wörtlich: „No real time communication". Unbrauchbar für Echtzeit. |
+| BACnet-Server (Gen 2) | offiziell, B-SA/B-GW, Port 47808. **Welche Objekte freigegeben werden und wie, ist in der KB nicht dokumentiert** — am Koffer mit YABE prüfen. HA hat keine Core-Integration. |
+| Debug-Monitor / UDP 7777 | sechs Log-Kanäle (Common, SPS, Protocol, Bus, File, Net). Der **SPS-Kanal enthält keine Meldung über Ein-/Ausgangswechsel**; der Bus-Kanal loggt nur Loxone-Link-Telegramme der Gen-1-Extensions (`LNK Value from … DigInputs`). Tree/Air laufen über einen proprietären Config-Kanal („EIP send monitor data"). Sackgasse. Quelle: Meldungstabelle `DEU.LxRes`, siehe [techdoc-lxres.md](techdoc-lxres.md). |
+| `dev/sps/enumin`, `enumout` | Web-Services-KB: listet alle SPS-Ein-/Ausgänge. Nur Aufzählung, kein Push. |
+| `dev/sps/log/<ip>` | Web-Services-KB: „Logging an IP einschalten". Vermutlich derselbe Debug-Kanal. **[OFFEN]** |
+| `jdev/sys/getconfiguration` | JSON mit u. a. `port-monitor`, `port-ftp`, `http-mode`. Nur Lesen der Netzkonfiguration. |
 
 ---
 
