@@ -61,7 +61,7 @@ Eingänge werden im Ausdruck als `I1`…`I4` angesprochen.
 | Typ | GUI-Name | Nio | Kernkonnektoren |
 |---|---|---|---|
 | `HeatIRoomController2` | Intelligente Raumregelung | 57 | `Temp`=ϑc · `Window`=Dwc · `Move`=P · `Reset`=Off · `TempO`=ϑo · `AQh`/`AQc`/`AQhc`=H/C/HC · `AQhc1`=HC1 · `Qs`=Shd · `AQt`=ϑt |
-| `PresenceDetector` | Präsenz | 19 | `InputActivate`=Act · `InputExtend`=Ext · `InputTrigger`=AE · `DeviceActivate/Extend/Trigger` (nur Loxone-Geräte) · `ParamTOn`=Pet · `OutputPresence`=P |
+| `PresenceDetector` | Präsenz | 19 | `InputActivate`=Act · `InputExtend`=Ext · `InputTrigger`=AE · `DeviceActivate/Extend/Trigger` (nur Loxone-Geräte) · `ParamTOn`=Pet · `OutputActive`=P · `OutputPresence`=Pc (TechDoc 05.09.2026; bis dahin stand hier `OutputPresence`=P) |
 | `LightController2` | Beleuchtungssteuerung | 75 | `Move`=Mo · `Presence`=P · `Brightness`=Br · `Sel1`…`Sel8` · `AQ1`…`AQ20` · `OutputReset` |
 | `AutoJalousie` | Automatikbeschattung | 49 | `InputTrigger`=Tg · `EndUp`/`EndDown`=Co/Cc · `AutoShade`=**Sps** · `EnAutoShade`=DisSp · `ReactAutoShade`=Spr · `Safety`=**Wa** · `Window`=Dwc · `Dir` · `OutputUp`/`OutputDown` |
 | `ToiletFan` | WC Lüftungssteuerung | 10 | `Trigger` · `Move` (Präsenz) · `Reset` · `Disable` · `AiringDelay` (180 s) · `MaxAiringDuration` (180 s) · `OutputActive`=S · `OutputFan`=Fan |

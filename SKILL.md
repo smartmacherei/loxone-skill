@@ -139,7 +139,7 @@ statt Attributen. Ein Scanner, der nur Attribute kennt, bricht dort ab.
 | [references/programmier-bausteine.md](references/programmier-bausteine.md) | **Ablaufsteuerung + Programm (PicoC)** — wann welches Werkzeug, XML-Aufbau, Befehls- und PicoC-Funktionsreferenz, Zeilenumbruch-Falle |
 | [references/mcp-server.md](references/mcp-server.md) | **MCP-Server auf dem Miniserver** (ab Config 17.1.6, nur Gen 2) — Einrichtung in der Netzwerkperipherie, OAuth statt Basic-Auth, Claude-Anbindung, Community-Bridges als Fallback |
 | [references/miniserver-dateizugriff.md](references/miniserver-dateizugriff.md) | **Programm im Miniserver lesen und schreiben** — HTTP kann nur lesen, FTP schreibt; LoxCC-Format samt CRC32; was der WebSocket pusht und was nicht |
-| [references/techdoc-lxres.md](references/techdoc-lxres.md) | **Offizielle Bausteindoku als XML aus dem Config-Paket** — 220 typisierte Bausteine mit XML-Konnektorname, Doku-Kürzel, Einheit, Bereich, Vorgabe; Decoder `scripts/decode_lxres.py`; kommt mit jedem Config-Update mit |
+| [references/techdoc-lxres.md](references/techdoc-lxres.md) | **Offizielle Bausteindoku als XML aus dem Config-Paket** — 220 typisierte Bausteine mit XML-Konnektorname, Doku-Kürzel, Einheit, Bereich, Vorgabe; Decoder `scripts/decode_lxres.py`, Abgleich `scripts/techdoc_abgleich.py` → [techdoc-abgleich.md](references/techdoc-abgleich.md); kommt mit jedem Config-Update mit |
 
 ### Baustein-Katalog — alle 179 Bausteine der offiziellen KB
 
@@ -178,6 +178,7 @@ Jede Aussage im Katalog ist gekennzeichnet. Die Kennzeichnung ist Teil der Infor
 | Kürzel | Bedeutung |
 |---|---|
 | `[BELEGT]` | wörtlich aus der offiziellen Loxone-KB, Quell-URL steht dabei |
+| `[BELEGT-TECHDOC]` | aus der maschinenlesbaren Bausteindoku des Config-Pakets ([techdoc-lxres.md](references/techdoc-lxres.md)) — Loxones eigene Daten, gleichwertig zu `[BELEGT]` |
 | `[ABGELEITET]` | geschlossen, **nirgends so nachzulesen** — vor sicherheitsrelevantem Einsatz prüfen |
 | `[OFFEN]` | unbekannt, bewusst nicht geraten |
 | `[COMMUNITY]` | LoxWiki / Loxforum, nicht offiziell — Config-Version und Alter beachten |

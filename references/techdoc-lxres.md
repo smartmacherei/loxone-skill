@@ -91,6 +91,7 @@ außerhalb der Visualisierung?" ist sie die Referenz — Befund in
 
 - **[OFFEN]** Ob `ControlType` mit der Typnummer im Projekt-XML (`Document/@…` oder
   `C/@…`) übereinstimmt — nicht geprüft.
-- **[OFFEN]** Abgleich aller 220 `LxType`-Einträge gegen den 179-Baustein-Katalog des Skills
-  (`bausteine-*.md`) und gegen [xml-doku-mapping.md](xml-doku-mapping.md). Erst danach darf
-  der Katalog als „aus TechDoc verifiziert" gelten.
+- **Erledigt 05.09.2026:** Abgleich gegen Katalog und [xml-doku-mapping.md](xml-doku-mapping.md) —
+  Skript `scripts/techdoc_abgleich.py`, Bericht [techdoc-abgleich.md](techdoc-abgleich.md). Sechs
+  Zuordnungen korrigiert (Präsenz-Ausgänge vertauscht, Brandmelder-Eingänge vertauscht, zwei
+  Raumregler-Ausgänge, sechs Alarm-Eingänge aufgelöst). **Nach jedem Config-Update erneut laufen lassen.**

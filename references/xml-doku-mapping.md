@@ -7,6 +7,11 @@ verbindet beide Welten für alle **29 Bausteintypen** aus
 
 **Stand:** 30.07.2026 · Loxone Config 17.1.7.27 · ControlList Version 273 · Objektversion `V="175"`
 
+**Gegen TechDoc geprüft am 05.09.2026** ([techdoc-lxres.md](techdoc-lxres.md), Bericht in
+[techdoc-abgleich.md](techdoc-abgleich.md)): 424 Zuordnungen bestätigt, **sechs korrigiert** — sie
+tragen unten die Marke `[BELEGT-TECHDOC]`. Neue Zuordnungen nicht mehr hier von Hand erheben, sondern
+`py -3 scripts/decode_lxres.py <sys_DEU.zip> --block <LxType>` fragen.
+
 ## Legende
 
 | Marke | Bedeutung |
@@ -517,11 +522,11 @@ Die drei `HI*` sind undokumentiert. Zugeordnete Geräte stehen im Attribut **`Ob
 | `AQh2` / `AQc2` / `AQhc2` | `H2` / `C2` / `HC2` | Quelle 2 | A | [ABGELEITET] |
 | `AQh3` / `AQc3` / `AQhc3` | `H3` / `C3` / `HC3` | Quelle 3 | A | [ABGELEITET] |
 | `Qs` | `Shd` | Beschattungsanforderung | A | [BELEGT] |
-| `AQs` | – | – | A | [OFFEN] — Kandidat `Om` (aktive Betriebsmodus-ID) |
+| `AQs` | `HCm` | Heiz-/Kühlmodus ("Heating / Cooling mode") | A | [BELEGT-TECHDOC] — vorher [OFFEN] |
 | `Qe` | `Error` | Fehler vorhanden | A | [ABGELEITET] |
 | `Qa` | – | – | A | [OFFEN] — Kandidat `TxErr`, aber `TxErr` ist ein **Text**ausgang, `Qa` sieht digital aus |
 | `AQt` | `ϑt` | Zieltemperatur | A | [BELEGT] |
-| `AQhm` | `HCm` | Heiz-/Kühlmodus (1 Heizen, -1 Kühlen, 0 aus) | A | [ABGELEITET] |
+| `AQhm` | `Om` | Aktueller Betriebsmodus ("Current operating mode") | A | [BELEGT-TECHDOC] ⚠️ **vorher `HCm`** |
 | `AQtm` | `Os` | Aktueller Temperaturmodus (-1…4) | A | [ABGELEITET] |
 | `Qb` | `Boost` | Boost aktiv | A | [ABGELEITET] |
 | `OutputAPI` | `API` | API-Konnektor | A | [ABGELEITET] |
@@ -636,12 +641,12 @@ Vollständige 10-zu-10-Deckung (4 E + 3 A + 3 P), Reihenfolge identisch.
 | `I3` | `Wc` | Fensterkontakte | E | [ABGELEITET] |
 | `I4` | `Dc` | Türkontakte | E | [ABGELEITET] |
 | `I5` (`Inv="true"`) | `Ot` | Sonstige Melder | E | [ABGELEITET] |
-| `ActiveOO` | (`Tg` **oder** `Tgnp`) | Toggle scharf/unscharf | E | [OFFEN] ⚠️ |
-| `ActiveOOP` | (`Tgnp` **oder** `Tg`) | Toggle scharf/unscharf | E | [OFFEN] ⚠️ |
-| `Active` | (`A` **oder** `Anp`) | Scharfschalten | E | [OFFEN] ⚠️ |
-| `ActiveP` | (`Anp` **oder** `A`) | Scharfschalten | E | [OFFEN] ⚠️ |
-| `ActiveDelay` | (`Ad` **oder** `Adnp`) | Verzögert scharfschalten | E | [OFFEN] ⚠️ |
-| `ActiveDelayP` | (`Adnp` **oder** `Ad`) | Verzögert scharfschalten | E | [OFFEN] ⚠️ |
+| `ActiveOO` | `Tg` | Toggle scharf/unscharf, mit Präsenzerkennung | E | [BELEGT-TECHDOC] — vorher [OFFEN], Reihenfolge-Vermutung bestätigt |
+| `ActiveOOP` | `Tgnp` | Toggle scharf/unscharf, ohne Präsenzerkennung | E | [BELEGT-TECHDOC] — vorher [OFFEN], Reihenfolge-Vermutung bestätigt |
+| `Active` | `A` | Scharfschalten, mit Präsenzerkennung | E | [BELEGT-TECHDOC] — vorher [OFFEN], Reihenfolge-Vermutung bestätigt |
+| `ActiveP` | `Anp` | Scharfschalten, ohne Präsenzerkennung | E | [BELEGT-TECHDOC] — vorher [OFFEN], Reihenfolge-Vermutung bestätigt |
+| `ActiveDelay` | `Ad` | Verzögert scharfschalten, mit Präsenzerkennung | E | [BELEGT-TECHDOC] — vorher [OFFEN], Reihenfolge-Vermutung bestätigt |
+| `ActiveDelayP` | `Adnp` | Verzögert scharfschalten, ohne Präsenzerkennung | E | [BELEGT-TECHDOC] — vorher [OFFEN], Reihenfolge-Vermutung bestätigt |
 | `Inactive` | `Off` | Off / Lock — dominierend | E | [ABGELEITET] |
 | `Confirm` | `Ca` | Confirm alarm — Alarm bestätigen, Anlage bleibt scharf | E | [BELEGT] |
 | `InputDisable` | `DisPc` | Sperrt `Tg, Tgnp, A, Anp, Ad, Adnp` | E | [ABGELEITET] |
@@ -727,9 +732,9 @@ Vollständige 26-zu-26-Deckung (8 E + 16 A + 2 P) in identischer Reihenfolge.
 |---|---|---|---|---|
 | `Confirm` | `Ca` | Alarm bestätigen | E | [ABGELEITET] |
 | `Mute` | `Cs` | Alarmsignale bestätigen (deaktiviert `Pas`/`Mas`) | E | [ABGELEITET] |
-| `InputAlarm` | (`F`) | AFCI / Brandschutzschalter? | E | [OFFEN] |
-| `InputAlarmW` | `W` | Externe **Wasser**melder | E | [ABGELEITET] |
-| `InputAlarmS` | `S` | Externe **Rauch**melder | E | [ABGELEITET] |
+| `InputAlarm` | `S` | Externe **Rauch**melder ("Smoke detector") | E | [BELEGT-TECHDOC] — vorher [OFFEN] mit Kandidat `F` |
+| `InputAlarmW` | `W` | Externe **Wasser**melder | E | [BELEGT-TECHDOC] |
+| `InputAlarmS` | `F` | AFCI / Brandschutzschalter | E | [BELEGT-TECHDOC] ⚠️ **vorher `S`** — das `S` im XML-Namen steht nicht für Smoke |
 | `InputTemp` | `T` | Externe Temperatursensoren | E | [ABGELEITET] |
 | `InputAirDigitalS` | – | – | E | [OFFEN] — in bausteine.md gelistet, in der KB nicht vorhanden |
 | `InputAirDigitalW` | – | – | E | [OFFEN] |
@@ -774,8 +779,8 @@ Zugeordnete Geräte stehen im Attribut **`Objects`**.
 | `ControlInput` | – | – | E | [OFFEN] |
 | `ParamTOn` (`900`) | `Pet` | Presence extend time (s) | P | [BELEGT] · 900 = 900 |
 | `ParamTWarn` (`15`) | `Tw` | Abschaltwarnzeit (s) | P | [ABGELEITET] · 15 = 15 |
-| `OutputPresence` | `P` | Präsenz | A | [BELEGT] |
-| `OutputActive` | `Pc` | Presence combined (für Präsenz-/Bewegungseingänge) | A | [ABGELEITET] — Restzuordnung |
+| `OutputPresence` | `Pc` | Presence combined (für Präsenz-/Bewegungseingänge) | A | [BELEGT-TECHDOC] ⚠️ **bis 05.09.2026 stand hier `P`** — TechDoc: `OutputPresence` = "Presence combined" |
+| `OutputActive` | `P` | Präsenz | A | [BELEGT-TECHDOC] ⚠️ vorher `Pc` per Ausschlussverfahren |
 | `OutputOn` | `Pon` | Impuls bei Präsenzstart | A | [ABGELEITET] |
 | `OutputOff` | `Poff` | Impuls bei Präsenzende | A | [ABGELEITET] |
 | `OutputOnTime` | `Pd` | Dauer der aktuellen Präsenzphase (s) | A | [ABGELEITET] |
@@ -790,8 +795,11 @@ XML 19, Doku 13 (4 E + 7 A + 2 P). Die sechs Zusatz-Konnektoren betreffen alle d
 **Loxone-Melder-Anbindung** (`Device*`, `OutputDev*`) — in der KB nicht beschrieben.
 Zugeordnete Melder stehen im Attribut **`DEVS`**.
 
-⚠️ `OutputActive`↔`Pc` folgt nur aus dem Ausschlussverfahren: bausteine.md legt
-`OutputPresence`=`P` fest, damit bleibt für die verbleibenden sechs XML-Ausgänge nur noch `Pc`
+⚠️ **Korrigiert 05.09.2026 nach TechDoc:** `OutputPresence`=`Pc`, `OutputActive`=`P`. Die alte
+Zuordnung (`OutputPresence`=`P`) stammte aus bausteine.md und war eine Namensanalogie, kein Config-Befund.
+Wer in einem Bestandsprojekt an `OutputPresence` hängt, hat den *kombinierten* Ausgang. Alter Text:
+`OutputActive`↔`Pc` folgte nur aus dem Ausschlussverfahren: bausteine.md legte
+`OutputPresence`=`P` fest, damit blieb für die verbleibenden sechs XML-Ausgänge nur noch `Pc`
 übrig. Die Doku-Reihenfolge (`Pc` **vor** `P`) spricht dagegen.
 
 ---
