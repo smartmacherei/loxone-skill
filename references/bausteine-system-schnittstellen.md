@@ -302,9 +302,13 @@ der Netzwerkperipherie (`WeatherCaption` „Netzwerkperipherie"), seine Objekte 
 | Digitaler Ausgang (214) | `BACnetActor` | `BQ<n>` | `binary-input,<Idx>` — der BACnet-Client **liest** |
 | Analoger Ausgang (215) | `BACnetAactor` | `AQ<n>` [ABGELEITET] | `analog-input,<Idx>` |
 
-Die Instanznummer des Servers (`Instanznummer`, Standard 0) schreibt Config bei 0 gar nicht ins XML;
-ein früherer Skriptversuch mit `Pt="47808" InNum="4711"` und Kindern ohne Captions **startete den
-Server nicht**. Attributnamen also nicht raten: `Port`, `IPv6`, `<HP>`, `SensorCaption`/`ActorCaption`.
+Die Instanznummer des Servers heißt **`InNum`** [VERIFIZIERT 05.09.2026: Eigenschaft in Config auf 1
+gesetzt → `InNum="1"` im XML, Who-Is antwortet `device,1`]. Beim Standardwert 0 schreibt Config das
+Attribut **gar nicht** — ein fehlendes `InNum` heißt also Instanz 0. `<HP>` ist der Container für das
+Reinitialize-Passwort: `H` = Hash (leer, wenn kein Passwort), `S` = Salt (wird beim zweiten Speichern
+gefüllt), `Alg="1"`, `Sc="-2"`; `Suh="true" Unh=""` stehen nur direkt nach dem Anlegen darin.
+Ein früherer Skriptversuch mit `Pt="47808" InNum="4711"` und Kindern ohne Captions **startete den
+Server nicht** — `Port`, `IPv6`, `<HP>` und `SensorCaption`/`ActorCaption` sind Pflicht.
 
 ### Am Miniserver sichtbar [VERIFIZIERT 05.09.2026]
 
