@@ -10,6 +10,10 @@ Fallen, die man sonst durch Ausprobieren lernt. **Nicht raten — hier nachsehen
 
 Stand: Loxone Config 17.1.7.27 · ControlList Version 273 · Objektversion `V="175"`
 
+Zusätzlicher Projektabgleich vom 09.09.2026: ConfigVersion `17020828`, ControlList 274.
+[Projektbefunde und Strukturinventar](references/demo-project-audit.md) ergänzen den
+älteren Vorlagenstand; keine pauschale Migration oder Live-Verifikation.
+
 ## Wann dieser Skill
 
 - `.Loxone`-Dateien lesen, analysieren oder per Skript bearbeiten
@@ -131,6 +135,7 @@ statt Attributen. Ein Scanner, der nur Attribute kennt, bricht dort ab.
 
 | Datei | Inhalt |
 |---|---|
+| [references/demo-project-audit.md](references/demo-project-audit.md) | **Projektbeleg vom 09.09.2026:** 2.279 Objekte, 223 XML-Typen, 31 zusätzliche Seiten-Bausteintypen gegenüber den XML-Vorlagen; strukturelles JSON-Inventar, konkrete MCP-Plugin-Struktur, Versionsgrenzen |
 | [references/xml-bearbeitung.md](references/xml-bearbeitung.md) | Dateiformat, verlustfreies Schreiben, PowerShell-Rezept, Fallstricke |
 | [references/bausteine.md](references/bausteine.md) | Vorlagen-Handhabung, die sieben verifizierten Konnektor-Zuordnungen |
 | [references/xml-doku-mapping.md](references/xml-doku-mapping.md) | **Interner XML-Konnektorname ↔ Doku-Kürzel** für alle 29 Vorlagentypen, plus die drei Lücken-Listen |
@@ -189,6 +194,7 @@ Jede Aussage im Katalog ist gekennzeichnet. Die Kennzeichnung ist Teil der Infor
 | `[BELEGT-TECHDOC]` | aus der maschinenlesbaren Bausteindoku des Config-Pakets ([techdoc-lxres.md](references/techdoc-lxres.md)) — Loxones eigene Daten, gleichwertig zu `[BELEGT]` |
 | `[ABGELEITET]` | geschlossen, **nirgends so nachzulesen** — vor sicherheitsrelevantem Einsatz prüfen |
 | `[OFFEN]` | unbekannt, bewusst nicht geraten |
+| `[PROJEKT-BELEGT]` | direkt in einer konkreten Projektdatei beobachtet; keine Aussage über Werkseinstellungen, Vollständigkeit oder Laufzeitverhalten |
 | `[COMMUNITY]` | LoxWiki / Loxforum, nicht offiziell — Config-Version und Alter beachten |
 
 `[BELEGT]` gibt es nur für die offizielle KB. Die gesamte Datei `community-praxiswissen.md`

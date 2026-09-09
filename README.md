@@ -7,6 +7,12 @@ Content is in German (the language of the official Loxone documentation it was v
 
 Status: Loxone Config 17.1.7.27 · ControlList version 273
 
+Additional project evidence (2026-09-09): ControlList 274, ConfigVersion `17020828`.
+The [project audit](references/demo-project-audit.md) adds a sanitized structural
+inventory of 223 XML types, including 31 page-block types absent from the existing
+XML templates, and the observed native MCP plugin structure. These are project
+observations, not factory defaults or a live compatibility test.
+
 ## Install
 
 Copy this folder to your Claude skills directory so that `SKILL.md` sits at:

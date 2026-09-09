@@ -3,7 +3,7 @@
 **Stand:** 28.08.2026 · Loxone Config 17.1.7.27 · Plugin `McpServer` (Katalog-Version 1.0.0, laut
 Changelog in 17.1.7.27 bereits 1.0.5)
 
-**Quellen — alles verifiziert, nichts geraten:**
+**Quellen und jeweilige Aussagegrenzen:**
 
 | Quelle | Was daraus stammt |
 |---|---|
@@ -13,6 +13,7 @@ Changelog in 17.1.7.27 bereits 1.0.5)
 | Live-Abfrage eines Miniservers FW 17.1.6.30 | OAuth-Metadaten, `WWW-Authenticate`, Rate-Limit |
 | Plugin-Binary `LxMcpServer` | Werkzeugnamen — **nicht offiziell dokumentiert** |
 | [ivantichy/loxone-mcp-proxy](https://github.com/ivantichy/loxone-mcp-proxy), [Smarteon/lox-mcp](https://github.com/Smarteon/lox-mcp) | Fallback-Bridges |
+| Demoprojekt vom 09.09.2026, ConfigVersion `17020828` | Gespeicherte XML-Struktur des Plugins, keine zusätzliche Live-Verifikation |
 
 > Kein Cloud-Dienst nötig: Der Server läuft **auf dem Miniserver**. Der Assistent authentifiziert
 > sich direkt dort, jede Anfrage läuft mit den Rechten des angemeldeten Loxone-Benutzers.
@@ -45,6 +46,37 @@ Kategorie** (`needRoom`/`needCategory`: false) und hat genau ein Kind-Objekt vom
 5. MCP-URL ermitteln (§ 3) und im Client eintragen (§ 7).
 
 ---
+
+### Projektbeleg vom 09.09.2026
+
+`[PROJEKT-BELEGT]` Im untersuchten Projekt ist der Pfad
+`C[@Type="LoxLIVE"]/C[@Type="WeatherCaption"]/C[@Type="Plugin" and @gid="McpServer"]`.
+Der interne Containername `WeatherCaption` darf nicht dazu führen, das Plugin
+bei einer Suche nach Netzwerkperipherie zu übersehen.
+
+Reduzierte Struktur (kein vollständiger, importierbarer Baustein):
+
+```xml
+<C Type="Plugin" gid="McpServer" V="178" Title="MCP Server">
+  <SET>
+    <custom-remote-url t="11" />
+    <custom-local-url t="11" />
+  </SET>
+  <!-- IoData und projektspezifische Attribute ausgelassen -->
+  <C Type="Online" IName="S1" Title="Onlinestatus MCP Server" />
+</C>
+```
+
+Die URL-Werte stehen als Elementinhalt unter `SET`, im Projekt beide leer;
+es gibt keine entsprechende URL als Attribut des Plugin-Objekts.
+Das bestätigt das in Abschnitt 2 beschriebene Muster mit leeren optionalen URLs.
+`Type="Online"` ist die Schreibweise im Projekt-XML (Groß-/Kleinschreibung beachten).
+Das vorhandene Statusobjekt enthält noch keinen Nachweis einer aktuell laufenden Verbindung.
+
+Die Datei liefert weder die tatsächlich per OAuth zugelassenen MCP-Tools noch
+eine erfolgreich getestete Codex-/ChatGPT-Anbindung. Geräte im Projekt sind nicht
+automatisch für den Assistenten freigegeben. Siehe
+[Projektabgleich und Grenzen](demo-project-audit.md).
 
 ## 3. Die MCP-URL
 

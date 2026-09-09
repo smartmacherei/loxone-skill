@@ -5,6 +5,10 @@ ein vollständiges XML-Muster, aus dem sich per Skript neue Instanzen erzeugen l
 
 **Stand:** 30.07.2026 · Loxone Config 17.1.7.27 · ControlList Version 273 · Objektversion `V="175"`
 
+**Ergänzung 09.09.2026:** Das [Demo-Projektinventar](demo-project-audit.md) dokumentiert
+31 weitere Seiten-Bausteintypen mit beobachtetem Konnektorsatz. Das Inventar enthält
+keine vollständigen Klonvorlagen; der ältere XML-Vorlagenstand bleibt erhalten.
+
 ---
 
 ## Wie man eine Vorlage verwendet
