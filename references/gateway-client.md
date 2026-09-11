@@ -190,10 +190,15 @@ Gilt für `scripts/ha_udp_logger.py`, die Home-Assistant-Integration und jedes S
    verwerfen die Pakete.
 4. **Heartbeat je Miniserver.** Der `Second`-Systemausgang existiert je Miniserver; ein
    einzelner Heartbeat sagt nichts über die Clients.
-5. **Upload.** Config schreibt das Gesamtarchiv ins Gateway, das nach dem Neustart
-   verteilt. Ob ein per FTP als `/prog/sps_new.zip` abgelegtes Gesamtarchiv nach
-   `dev/sps/restart` genauso verteilt wird, ist **nicht belegt** und nur in einem eigenen
-   Testaufbau zu klären — nie an einer Kundenanlage.
+5. **Upload.** Config schreibt das Gesamtarchiv ins Gateway; die Verteilung an die
+   Clients ist eine Funktion des **Gateways nach seinem Neustart**, nicht von Config
+   (Errichterpraxis, deckt sich mit KB und LoxWiki). Da Config selbst per FTP
+   `/prog/sps_new.zip` plus `dev/sps/restart` speichert (verifiziert, siehe
+   [miniserver-dateizugriff.md](miniserver-dateizugriff.md) § 5), ist zu erwarten, dass ein
+   per Skript abgelegtes Gesamtarchiv genauso verteilt wird. **Restrisiko:** das Archiv muss
+   vollständig und in sich stimmig sein — alle `spsN.LoxCC`, `LoxAPP3_N`, `permissions_N`,
+   `Emergency_N` und `sps.Loxone` zueinander passend. Ein Teil davon falsch, und vier
+   Miniserver laden es. Erst im eigenen Testaufbau bestätigen, nie an einer Kundenanlage.
 6. **Zentralbausteine** bleiben je Miniserver (Abschnitt 1).
 7. **Eindeutige UUIDs.** Werden verwaltete Objekte je Miniserver angelegt, muss die
    `Program`-UUID in die Ableitung der eigenen UUIDs einfließen, sonst kollidieren vier
@@ -223,6 +228,7 @@ Für jede Aussage aus Abschnitt 5 und 6, die „abgeleitet" ist:
 
 - Bedeutung von `REFCT`/`REFST` am Proxy-Merker.
 - Ob das Gateway für unbenutzte Client-Klemmen Werte liefert (Rezept 1).
-- Verteilverhalten beim FTP-Upload (Rezept 5).
+- Bestätigung im Testaufbau, dass ein per Skript hochgeladenes Gesamtarchiv nach dem
+  Gateway-Neustart an die Clients verteilt wird (Rezept 5); nach Errichterpraxis ja.
 - Programmformat `174` (ältere Config) ist in den Werkzeugen nicht freigegeben; die
   verifizierten Formate sind `175` und `178` (Config 17.1/17.2).
