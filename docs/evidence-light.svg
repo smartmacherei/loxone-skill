@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 108" width="720" height="108" role="img" aria-label="Evidence labelling: 2177 marked claims, 63.6 percent documented or measured, 22.0 percent derived or community, 14.4 percent explicitly marked unknown.">
+<rect x="0" y="0" width="720" height="108" rx="8" fill="#fcfcfb" stroke="#e6e5e1"/>
+<style>text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}</style>
+<text x="16" y="21" fill="#0b0b0b" font-size="13" font-weight="600">Every claim carries its source &#8212; 2,177 labelled statements</text>
+<rect x="16.0" y="30.0" width="435.6" height="30.0" rx="3" fill="#2a78d6"/>
+<rect x="453.5" y="30.0" width="151.1" height="30.0" rx="3" fill="#eb6834"/>
+<rect x="606.5" y="30.0" width="98.5" height="30.0" rx="3" fill="#1baf7a"/>
+<rect x="16.0" y="76" width="9" height="9" rx="2" fill="#2a78d6"/>
+<text x="31.0" y="85" fill="#0b0b0b" font-size="12" font-weight="600">63.6%</text>
+<text x="31.0" y="101" fill="#52514e" font-size="11">Documented or measured</text>
+<rect x="252.0" y="76" width="9" height="9" rx="2" fill="#eb6834"/>
+<text x="267.0" y="85" fill="#0b0b0b" font-size="12" font-weight="600">22.0%</text>
+<text x="267.0" y="101" fill="#52514e" font-size="11">Derived or community</text>
+<rect x="488.0" y="76" width="9" height="9" rx="2" fill="#1baf7a"/>
+<text x="503.0" y="85" fill="#0b0b0b" font-size="12" font-weight="600">14.4%</text>
+<text x="503.0" y="101" fill="#52514e" font-size="11">Explicitly marked unknown</text>
+</svg>
