@@ -10,6 +10,12 @@ Legende: [BELEGT] = woertlich aus der KB - [ABGELEITET] = geschlossen - [OFFEN] 
 
 Dieser Baustein steuert die Audiowiedergabe auf einem Loxone-Audiosystem. Er ermöglicht die Kontrolle von Lautstärke, Wiedergabe, Favoriten und verschiedenen Tonarten (Alarm, Klingel, Wecker).
 
+> **XML-Typ `MusicPlayer`** (ControlType 507, Visu-/API-Typ `AudioZoneV2`). Setzt einen
+> **Audioserver** (`AudioServer` + `AudioOut`) voraus. Der Audioserver kann ausschließlich
+> eigene Verstärkerkanäle bespielen — **keine Sonos-, Chromecast- oder UPnP-Lautsprecher**.
+> Für Fremdlautsprecher siehe [sonos-integration.md](sonos-integration.md).
+> Für Fremd-AV-Geräte ohne Loxone-Audiogerät: Baustein **Medien-Steuerung** (`Media`).
+
 #### Eingänge [BELEGT]
 https://www.loxone.com/dede/kb/audio-player/
 
@@ -244,6 +250,13 @@ Quelle: https://www.loxone.com/dede/kb/audio-zentral/
 ### Music Server Zone
 
 Dieser Baustein steuert eine einzelne Musikzone auf dem Loxone Music Server oder anderen kompatiblen Musikservern.
+
+> **XML-Typ `MediaClient`** (ControlType 463, Visu-/API-Typ `AudioZone`). Der Baustein braucht
+> ein Gerät `MultiMediaServer` im Peripheriebaum — ohne Music Server ist er nicht verwendbar.
+> „Andere kompatible Musikserver" heißt in der Praxis: Software, die sich auf Port 7091 als
+> Loxone Music Server ausgibt. Das ist der einzige Weg, **Sonos** mit nativer Loxone-Kachel
+> zu betreiben → [sonos-integration.md](sonos-integration.md).
+> **Der einzige Audio-Baustein mit Klonvorlage** (`FactoryPresets.xml`, `V="121" Nio="54"`).
 
 #### Eingänge [BELEGT]
 https://www.loxone.com/dede/kb/music-server-zone/

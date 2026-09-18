@@ -1,6 +1,6 @@
 ---
 name: loxone-config
-description: Use when working with Loxone Config projects or .Loxone files - reading, analysing or script-editing project XML, wiring function blocks (Intelligente Raumregelung, Automatikbeschattung, Präsenz, Lichtsteuerung, WC Lüftungssteuerung, Zentralbausteine), retrofitting KNX/DALI installations, running or evaluating the Auto-Konfiguration, or answering what a Loxone block can do.
+description: Use when working with Loxone Config projects or .Loxone files - reading, analysing or script-editing project XML, wiring function blocks (Intelligente Raumregelung, Automatikbeschattung, Präsenz, Lichtsteuerung, WC Lüftungssteuerung, Zentralbausteine), retrofitting KNX/DALI installations, running or evaluating the Auto-Konfiguration, integrating third-party devices (Loxone Library templates and .LxAddon files, Modbus/virtual output/IR/RS232 templates, Sonos and other audio, LoxBerry or Home Assistant bridges), or answering what a Loxone block can do.
 ---
 
 # Loxone Config
@@ -23,6 +23,10 @@ Zusätzlicher Projektabgleich vom 09.09.2026: ConfigVersion `17020828`, ControlL
 - Fragen wie „was kann Baustein X laut Doku"
 - MCP-Server einrichten oder einen KI-Assistenten an den Miniserver anbinden
 - Das Programm direkt aus dem Miniserver lesen oder zurückschreiben
+- Fremd-Audio (Sonos, Multiroom) an Loxone anbinden — Music Server, Audioserver,
+  virtuelle Ausgänge, LoxBerry- oder Home-Assistant-Brücke
+- Ein Fremdgerät (Wechselrichter, Zähler, Wallbox, Wärmepumpe, TV …) einbinden:
+  **zuerst in der Loxone Library nachsehen**, statt Modbus-Register abzutippen
 
 ## Die elf Fallen
 
@@ -145,6 +149,8 @@ statt Attributen. Ein Scanner, der nur Attribute kennt, bricht dort ab.
 | [references/mcp-server.md](references/mcp-server.md) | **MCP-Server auf dem Miniserver** (ab Config 17.1.6, nur Gen 2) — Einrichtung in der Netzwerkperipherie, OAuth statt Basic-Auth, Claude-Anbindung, Community-Bridges als Fallback |
 | [references/miniserver-dateizugriff.md](references/miniserver-dateizugriff.md) | **Programm im Miniserver lesen und schreiben** — HTTP kann nur lesen, FTP schreibt; LoxCC-Format samt CRC32; **Upload wie Config: `/prog/sps_new.zip` + `dev/sps/restart`** (verifiziert); was der WebSocket pusht und was nicht; **Klemmen per Logger-UDP in Echtzeit melden** (`OutputRefLM`, Skript `scripts/ha_udp_logger.py`) |
 | [references/gateway-client.md](references/gateway-client.md) | **Gateway/Client (Konzentrator, „Master/Client")** — Archiv mit `sps.Loxone` + `spsN.LoxCC` je Miniserver, `Gateway`/`SLAVE`/`GatewayClient`-Objekte, `Program.Ref` → `LoxLIVE`; **fremde Eingänge werden im Teilprogramm zum Merker mit derselben UUID, fremde Ausgänge bleiben hängende Referenzen**; Gateway-Strukturdatei enthält alle Clients, `msInfo.gatewayType`; Folgen für Logger-/Upload-Skripte, Prüfrezept |
+| [references/peripherie-objekte-xml.md](references/peripherie-objekte-xml.md) | **Modbus, RS232/485, HTTP-/UDP-Eingang, IR und MP-Bus im XML** — Attributsätze aus 701 Library-Vorlagen erhoben (176.850 Attributvorkommen). Modbus-Funktionscodes, das **`ModbusDataType`-Bitfeld** (an allen 6.854 Vorkommen restlos zerlegt), `Check`-Muster für JSON, was beim Vorlagenbau schiefgeht. Ergänzt `xml-bearbeitung.md`, das nur `VirtualOut` abdeckt |
+| [references/techdoc-dokumente.md](references/techdoc-dokumente.md) | **Loxones eigene PDFs aus `TechDoc/TechDoc_Common.zip`** (121 MB, liegt in jeder Installation): die **API-Kommandos** (SET/MENU/VALUESELECT/ECHO …), **Ports und Domains** komplett, **wann Air-Geräte offline gehen** (24 h / 52 h / bis zu 24 h zurück), die **Audio-Gruppierungs-API** `audio/cfg/dgroup`, App-URL-Schemata, Kameraanforderungen für Intercoms, Belimo-Fehlercodes |
 | [references/techdoc-lxres.md](references/techdoc-lxres.md) | **Offizielle Bausteindoku als XML aus dem Config-Paket** — 220 typisierte Bausteine mit XML-Konnektorname, Doku-Kürzel, Einheit, Bereich, Vorgabe; Decoder `scripts/decode_lxres.py`, Abgleich `scripts/techdoc_abgleich.py` → [techdoc-abgleich.md](references/techdoc-abgleich.md); kommt mit jedem Config-Update mit |
 
 ### Baustein-Katalog — alle 179 Bausteine der offiziellen KB + 20 aus der TechDoc
@@ -182,6 +188,8 @@ Erzeugt und aktualisiert mit `py -3 scripts/techdoc_katalog.py <sys_DEU.zip> --a
 | Datei | Inhalt |
 |---|---|
 | [references/anwendungsbeispiele.md](references/anwendungsbeispiele.md) | 25 Anwendungsbeispiele + 11 Config Challenges, je mit Verdrahtungsidee |
+| [references/library-loxone-com.md](references/library-loxone-com.md) | **Loxone Library — alle 735 Fremdgeräte-Integrationen**, vollständig gecrawlt. Das `.LxAddon`-Format samt `templateType`-Tabelle, die offene JSON-API zum Selbst-Abfragen, die 21 Add-ons aus `addons.json` (alle **nur Gen 2**), und warum nur 33 Einträge zertifiziert sind. Daten: [library-katalog.json](references/library-katalog.json), erneuern mit `scripts/library_crawl.py` |
+| [references/sonos-integration.md](references/sonos-integration.md) | **Sonos an Loxone** — in Config ist nichts eingebaut (an 17.2.8.28 nachgewiesen), aber Loxone veröffentlicht eine Library-Vorlage: 19 SOAP-Befehle, **die meistgeladene Integration überhaupt**. Die vier Wege: Music-Server-Emulation (nativer Baustein), HTTP-Bridge, Home Assistant, UPnP/SOAP. Dazu `Media` als gerätefreie Alternative und die Sonos-Einstellung, die alles stilllegt |
 | [references/tutorials.md](references/tutorials.md) | Video-Tutorials und Config-Allgemein-Artikel, nach Baustein sortiert |
 | [references/community-praxiswissen.md](references/community-praxiswissen.md) | ⚠️ **LoxWiki / Loxforum** — Bugs, Workarounds, Grenzen. Nicht offiziell. |
 
@@ -233,6 +241,19 @@ Maschinenlesbare Bausteindoku (alle Bausteine, offiziell): `C:\ProgramData\Loxon
 | Gateway/Client: welche Datei gehört zu welchem Miniserver? | `sps0.LoxCC` = Gateway, `spsN.LoxCC` = Client mit `SLAVE Type="N"` bzw. `GatewayClient ProgType="N"`; `Program Ref="<LoxLIVE-U>"`; `sps.Loxone` = Gesamtprojekt, das Config lädt — [gateway-client.md](references/gateway-client.md) |
 | Fremder Ein-/Ausgang auf einer Seite eines anderen Miniservers | Eingang → im Teilprogramm ein `Memory` **mit derselben UUID** (`Tp` 0 digital / 1 analog); Ausgang → `OutputRef` mit `Ref` auf eine UUID, die im Teil nicht existiert. **Keine Markierung im XML**, Besitzer nur über den `LoxLIVE`-Vorfahren — [gateway-client.md](references/gateway-client.md) 4 |
 | Logger-UDP oder Upload im Gateway/Client-Verbund | Logger ins Programm des **besitzenden** Miniservers, `sps.Loxone` mitändern, Absender = Client-IP, Heartbeat je Miniserver; FTP-Verteilung an Clients **unbelegt** — nur im Testaufbau — [gateway-client.md](references/gateway-client.md) 6 |
+| Gibt es für Gerät X eine Loxone-Vorlage? | Erst in [library-katalog.json](references/library-katalog.json) nachsehen (735 Einträge), **nicht** raten und nicht von Hand Register abtippen. Download: `curl -L -o X.LxAddon https://api.library.loxone.com/downloader/config/<slug>` — [library-loxone-com.md](references/library-loxone-com.md) |
+| Modbus-Register per Skript anlegen | `<ModbusCmd>`: `ModbusCmd` = **Funktionscode** (3/4 lesen, 6/16 schreiben, 1/2 Coils lesen, 5/15 schreiben), `ModbusDataType` = **Basistyp 0–8 plus Flags +32/+64/+128** — [peripherie-objekte-xml.md](references/peripherie-objekte-xml.md) |
+| JSON aus einem HTTP-Eingang holen | `VirtualInHttp` mit `PollingTime` (Standard 10 s), je Wert ein `VirtualInHttpCmd` mit `Check="\i&quot;schlüssel&quot;:\i\v"`. **Im XML doppelt maskiert** — [peripherie-objekte-xml.md](references/peripherie-objekte-xml.md) 3 |
+| Air-Gerät ist offline | Timeout **24 h** netzgespeist, **52 h** batteriebetrieben; Remote Air nie. Das Gerät verlängert seine Wiederholabstände **bis auf 24 h** — Miniserver-Neustart hilft nicht, das Gerät muss aufgeweckt werden — [techdoc-dokumente.md](references/techdoc-dokumente.md) 3 |
+| Was kann der API-Konnektor? | `SET` · `SETT5` · `MENU` · `VALUESELECT` · `TIMESELECT` · `WAIT` · `GETINPUT` · `GETOUTPUT` · `ECHO`, Verkettung mit `=…&…`. **Kein Nesting.** Meist nur Touch Pure Flex — [techdoc-dokumente.md](references/techdoc-dokumente.md) 1 |
+| Welche Ports muss die Firewall durchlassen? | Miniserver-Suche **UDP 7070–7071**, Gateway/Client **UDP 7070–7077 mit Broadcast**, Audioserver→Miniserver **TCP 7095**, Audio-Steuerung **TCP 7091**, PTP **UDP 319/320**. Remote Connect nutzt **zufällige Ports 20000–65000** — [techdoc-dokumente.md](references/techdoc-dokumente.md) 2 |
+| Multiroom-Audio läuft auseinander | PTPv2 prüfen: UDP 319/320, Multicast 224.0.1.129. **IGMP-Snooping und Energiesparmodi der Switches stören** (Loxone wörtlich) — [techdoc-dokumente.md](references/techdoc-dokumente.md) 2 |
+| Audiozonen aus der Logik gruppieren | `VirtualOut` auf `http://<audioserver>:7091/` (**Schrägstrich am Ende ist Pflicht**), dann `audio/cfg/dgroup/create/<Master>,<Player>,…` bzw. `/delete/<Master>`. Der Befehl beschreibt den **Sollzustand** — [techdoc-dokumente.md](references/techdoc-dokumente.md) 4 |
+| Kamera als Intercom geht nicht | Nur **Basic/Digest-Auth**, nur `multipart/x-mixed-replace` oder `image/jpeg`, max. **5 MB** je Bild. **RTSP/H.264 ist ausgeschlossen** — [techdoc-dokumente.md](references/techdoc-dokumente.md) 6 |
+| Vorlage gefunden — ist sie brauchbar? | `cert` (nur 33 von 735 sind zertifiziert), `dl` und `by` prüfen. **Nach dem Import immer die Adresse ändern** — jede Vorlage trägt die IP des Einreichers |
+| Was integriert Loxone selbst nativ? | Die 21 Add-ons in `<Config>\addons.json` (Alexa, HomeKit, Matter, MQTT, McpServer, EEBUS, OCPP, Gardena, Fronius, BMW …) — **alle mit `needGen2: true`**. Sonos ist **nicht** dabei — [library-loxone-com.md](references/library-loxone-com.md) 5 |
+| Sonos an Loxone | **In Config ist nichts eingebaut** — „Sonos" kommt in der ganzen Installation nur in `ForbiddenPasswords.txt` vor. Schnell: Loxones Library-Vorlage `sonos-speakers-28` importieren (19 SOAP-Befehle, kein Rückkanal). Vollwertig: Software emuliert einen Music Server auf Port 7091, Config legt ihn als „Loxone Music Server" an → native `MediaClient`-Zonen — [sonos-integration.md](references/sonos-integration.md) |
+| Fremd-Audio/AV ohne Loxone-Audiogerät in die Visu | Baustein **Medien-Steuerung** (`Media`, ControlType 462) — der einzige Audio-Baustein, der **kein** Gerät voraussetzt. Ein/Aus, Lautstärke, Kanal, Betriebsart. Titel/Cover/Favoritenliste kann nur die Music Server Zone — [sonos-integration.md](references/sonos-integration.md) 8 |
 | Werte per BACnet freigeben | **Nichts ist automatisch sichtbar.** Je Wert ein Objekt unter `BACnetDevice` → `ActorCaption` (`BACnetActor` = `binary-input`, Miniserver-Ausgang) bzw. `SensorCaption` (`BACnetSensor` = `binary-output`, schreibbar). `subscribeCOV` pusht in 2–3 ms. XML-Vorlage und Messwerte: [bausteine-system-schnittstellen.md](references/bausteine-system-schnittstellen.md) BACnet; Prüfen ohne YABE: `py -3 scripts/bacnet_probe.py <ip>` |
 
 **XML-Typname ≠ GUI-Name.** Diese sechs führen zuverlässig in die Irre:
@@ -245,6 +266,15 @@ nicht „Impuls bei") · `DayTimer` ist die **Schaltuhr** · `SmokeAlarm` ist di
 trägt das Doku-Kürzel **`DisSp`** — der XML-Name sagt „enable", die Doku „disable".
 Und `Code` ist **doppelt vergeben**: am `<C Type="Document">` ist es die **Postleitzahl**,
 am `Code16` der Programmtext.
+
+**Die Audio-Typen sind durchgehend irreführend benannt** (verifiziert an Config 17.2.8.28):
+`MediaClient` ist die **Music Server Zone** · `MusicPlayer` der **Audio Player** ·
+`Media` die **Medien-Steuerung** (ein generischer AV-Baustein, *kein* Audioserver-Baustein) ·
+`CentralMusic` **Audio Zentral** · `MPGroup` die **Audio Player Gruppe fix**.
+Auf der Geräteseite: `MultiMediaServer` ist das **Music-Server-Gerät** mit `MusicZone`-Kindern,
+`AudioServer` der **Audioserver** mit `AudioOut`/`AudioGroup`, `MusicExt` die
+**Stereo Extension**. In der Visu-/API-Ebene heißt `MediaClient` dann `AudioZone` und
+`MusicPlayer` `AudioZoneV2` — die „V2" gehört zum **Audio Player**, nicht zur Zone.
 
 ## Grenzen der Auto-Konfiguration
 

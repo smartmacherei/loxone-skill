@@ -208,10 +208,22 @@ Quelle: https://www.loxone.com/dede/kb/ablaufsteuerung/
 | `Remanence` | `Rem` | Remanenz | P | [ABGELEITET] |
 | `TQ1` … `TQ3` | `Txt1-3` | Textausgang 1–3, max. 4096 Byte | A | [ABGELEITET] |
 | `AQ1` … `AQ13` | `O1-13` | Ausgang 1–13 | A | [ABGELEITET] |
-| `TeQ` | `Etxt` | Fehlertext | A | [ABGELEITET] |
+| `TeQ` | `Etxt` | Fehlertext | A | **[BELEGT]** |
 
 17 Eingänge + 17 Ausgänge = 34 = `Nio`. Doku 17 + 17. **Keine Lücke** — die Zuordnung ist
 belastbar, obwohl formal abgeleitet.
+
+**Zu `Etxt` sagt `CustomScriptProgramming.pdf` wörtlich** (Config-Paket, siehe
+[techdoc-dokumente.md](techdoc-dokumente.md)): „Each program also has an error output Etxt,
+where interpreter error messages are released. This allows the detection of syntax errors."
+→ **Der Ausgang ist die Syntaxfehler-Meldung.** Wer PicoC per Skript einspielt, sollte `Etxt`
+verdrahten, sonst scheitert ein Tippfehler unsichtbar.
+
+Dasselbe Dokument nennt außerdem **vier Baugrößen** des Bausteins: „There are program objects
+with 1, 4, 8 and 16 inputs and outputs." Der XML-Typ `Code16` ist die größte davon; für die
+kleineren ist der Typname **[OFFEN]** — vermutlich `Code1`/`Code4`/`Code8`, in keinem
+untersuchten Projekt beobachtet. Einzufügen sind sie in Config über den Reiter **Programm**
+unter *Allgemein*.
 
 | Attribut | Bedeutung | Status |
 |---|---|---|

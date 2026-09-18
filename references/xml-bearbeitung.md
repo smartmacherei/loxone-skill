@@ -380,6 +380,8 @@ Sonderzeichen aus URL und JSON werden **ganz normal XML-escapet** (`&`→`&amp;`
 `IName` (`VQ1`, `VQC1`, …) muss projektweit eindeutig sein. Analog dazu am virtuellen Eingang:
 `VirtualInHttp` mit `PollingTime`, `VirtualInHttpCmd`, `VirtualInUdp` mit `Port`.
 
+> **Die vollständigen Attributsätze** dieser Objekte — dazu `Modbus`/`ModbusCmd`, `Comm`/`CommCmd` und die IR-Objekte — stehen in [peripherie-objekte-xml.md](peripherie-objekte-xml.md), erhoben aus 701 Library-Vorlagen.
+
 Der Eingang eines `VirtualOutCmd` (`<Co K="I">`) lässt sich **direkt** aus der Logik speisen —
 eine Ausgangsreferenz auf einer Seite ist nur die Zeichnung. Das erspart das Raten des
 `LinkRefType`. Gleiches Muster wie bei `EIBactor`: `OutputRef.AQ → EIBactor.I`.
