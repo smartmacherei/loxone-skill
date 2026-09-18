@@ -180,7 +180,10 @@ Gilt für `scripts/ha_udp_logger.py`, die Home-Assistant-Integration und jedes S
    Miniservers liegen, an dem die Klemme physisch hängt: `Logger` unter dessen
    `LoggerOutCaption`, `OutputRefLM` auf einer Seite seines `Program`. Ein Logger im
    Gateway-Programm für eine Client-Klemme setzt einen Proxy-Merker voraus, den Config
-   erzeugt — nicht nachbauen.
+   erzeugt — nicht nachbauen. Und er wäre auch betrieblich falsch: Der Client schickt
+   jede Änderung erst über das Netz zum Gateway, das sie dann per UDP weitergibt.
+   Ein Logger je Miniserver für dessen eigene Klemmen erzeugt keinen Verkehr zwischen
+   den Miniservern und hängt nicht am Gateway (Errichterpraxis, 11.09.2026).
 2. **`sps.Loxone` mitändern.** Config lädt im Verbund das Gesamtprojekt vom Gateway. Wer
    nur die `spsN.LoxCC` ändert, verliert die Änderung beim nächsten „Im Miniserver
    speichern", und ein Werkzeug, das sie danach erneut anlegt, produziert Neustartschleifen
@@ -232,3 +235,30 @@ Für jede Aussage aus Abschnitt 5 und 6, die „abgeleitet" ist:
   Gateway-Neustart an die Clients verteilt wird (Rezept 5); nach Errichterpraxis ja.
 - Programmformat `174` (ältere Config) ist in den Werkzeugen nicht freigegeben; die
   verifizierten Formate sind `175` und `178` (Config 17.1/17.2).
+
+## 9. Befunde beim Bau des Beta-Pfads (Archiv eines Bestandsverbunds, 4 Miniserver, Format 174)
+
+- Das Systemobjekt `Second` (Sekundenimpuls, unter `TimeCaption` < `Document`) steht mit
+  derselben UUID in `sps.Loxone` und in jedem `spsN.LoxCC`. Jeder Miniserver kann es
+  daher als Logger-Eingang nutzen. Weil die UUID überall gleich ist, trägt das
+  Lebenszeichen je Miniserver im Meldungstext die UUID des `LoxLIVE`
+  (`<LoxLIVE-U>;<v>`) statt der Second-UUID; der Empfänger unterscheidet die
+  Miniserver dann ohne Absenderadresse.
+- Der `LoxLIVE`-Teilbaum eines Miniservers ist im Teilprogramm identisch mit dem im
+  Gesamtprojekt (gleiche Objekt-UUIDs). Nur das Gateway-Teilprogramm führt unter seinem
+  `LoxLIVE` zusätzlich Kopien fremder `Notification`, `IntercomDevice`, `ApiActor` und
+  `LoxDeviceCaption` der Clients. Klemmenzuordnung deshalb immer aus dem Gesamtprojekt
+  ableiten und auf die Teilprogramme übertragen, nie aus dem Teilprogramm selbst.
+- Fremde Klemmen erscheinen im Teilprogramm als `Memory`-Proxy (`Tp="0"`/`"1"`) auf den
+  Seiten, nie unter dem `LoxLIVE`. Wird dieselbe fremde Klemme auf mehreren Seiten
+  verwendet, schreibt Config **je Seite einen eigenen `Memory`-Proxy mit derselben
+  Objekt-UUID** (Konnektoren bleiben eindeutig). Ein Duplikat-Schutz muss genau diesen
+  Fall zulassen; im Gesamtprojekt gibt es keine Duplikate.
+- `Document/@U` ist in allen Dateien gleich; deterministische Objekt-IDs aus
+  `Document-U + Program-U + Label` sind damit in Projekt und Teilprogrammen identisch.
+- `Program/@Ref` zeigt in jedem Teilprogramm auf das enthaltene `LoxLIVE`; darüber
+  findet man `LoggerOutCaption` (Ziel für den Logger) und den Klemmenbaum des
+  Miniservers.
+- Entdeckungsreihenfolge: das Gateway-Programm steht vorn, bei einer globalen
+  Höchstzahl (z. B. 500) blieben die Clients leer. Abhilfe: reihum über die Miniserver
+  auswählen, innerhalb eines Miniservers in Programmreihenfolge.
