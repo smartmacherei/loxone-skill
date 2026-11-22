@@ -6,7 +6,8 @@ that doesn't. This skill replaces that with looked-up answers — and marks ever
 claim with where it came from.
 
 Content is in German, the language of the official Loxone documentation it was verified
-against. Verified as of **Loxone Config 17.2.8.28**.
+against. Verified as of **Loxone Config 17.2.8.28**; the Config MCP and the light controller
+migration were verified on **Loxone Config 17.3.11.12** (November 2026).
 
 ---
 
@@ -94,7 +95,7 @@ trusted where it does claim certainty.
 
 ## What's inside
 
-37 reference documents, 7 scripts, about 18,700 lines.
+40 reference documents, 10 scripts, about 19,400 lines.
 
 | Area | What you get |
 |---|---|
@@ -104,13 +105,17 @@ trusted where it does claim certainty.
 | **Peripheral XML** | Modbus, RS232/485, HTTP/UDP inputs, IR — attribute sets derived from 176,850 real occurrences in 701 templates |
 | **Miniserver access** | Read and write the program over FTP, push terminal values out over UDP in real time, Gateway/Client setups |
 | **Networking** | Every port and domain Loxone uses; why Air devices go offline and stay offline for up to 24 hours |
+| **Config MCP (17.3)** | Edit, wire, align and simulate the project open in Loxone Config, one undo step per script; two traps found only in simulation |
+| **Generation migration** | Lighting Controller Gen 1 to the current Lighting Controller: parameter map, dimmer value encoding, mood IDs, behaviour changes; Gen 1 room controller calendar modes |
 | **Audio & Sonos** | The four ways to attach Sonos, honestly ranked — including what Loxone itself ships and what it can't do |
 
 ### Scripts
 
 `decode_lxres.py` reads Loxone's own block documentation out of the Config package ·
 `library_crawl.py` refreshes the Library catalogue · `ha_udp_logger.py` wires terminals
-to a UDP listener · `bacnet_probe.py` checks BACnet without YABE · plus TechDoc diffing
+to a UDP listener · `bacnet_probe.py` checks BACnet without YABE · `config_mcp.py` talks to the Config MCP
+without registering it · `mcp_direct.py` reaches the Miniserver MCP behind a Fritz!Box ·
+`blattgrenzen_pruefen.cjs` finds blocks outside the printable page · plus TechDoc diffing
 and project inventory tools.
 
 ---

@@ -153,6 +153,41 @@ Das ist ein **anderes** Passwort als das für erweiterte Rechte.
 
 ## 5. Werkzeuge
 
+### Live abgefragt: Plugin 1.0.8, FW 17.2.10.21
+
+`[PROJEKT-BELEGT]` `tools/list` am laufenden Miniserver, 02.11.2026.
+
+| Werkzeug | Art | Zweck |
+|---|---|---|
+| `control_find` | Read | Steuerungen suchen, Filter `query`, `room`, `type`, `limit` |
+| `control_describe` | Read | Befehle, Zustände, Einstellungen, verknüpfte Zähler einer Steuerung |
+| `control_state` | Read | aktueller Zustand; `history: N` + `since` liefert die letzten Änderungen, Vorgabe-`limit` 50 |
+| `control_history` | Read | Aktivitätsverlauf wie in der App |
+| `control_statistics` | Read | Zeitreihen; `mode: "diff"` mit `dp_unit` oder `mode: "raw"` |
+| `weather` | Read | aktuelles Wetter, mit `hours` stündliche Vorhersage |
+| `list_rooms` | Read | Räume |
+| `system_status` | Read | Firmware, Plugin-Version, aktive Systemmeldungen |
+| `control_command` | Write | Befehl senden, z. B. `on`, `manualPosition/50` |
+| `control_secured_command` | Write | Befehl mit Visu-Passwort |
+| `code_run` | Write | JavaScript mit `lox.*`-SDK, 100 ms–60 s, Vorgabe 15 s. Bündelt mehrere Aufrufe in einem, hat aber **nur dieselben Funktionen** wie die Werkzeuge hier |
+| `sdk_describe` | Read | TypeScript-Deklarationen des SDK |
+
+**Konfigurieren geht nicht.** Kein Werkzeug und keine SDK-Funktion legt Bausteine an, verdrahtet oder
+ändert das Programm. Wer „Bausteine über MCP einrichten" will, braucht Loxone Config oder einen
+XML-Patch; der MCP-Server taugt zum Vorher-Lesen und Nachher-Prüfen.
+
+**Abonnieren geht nicht, nur pollen.** `initialize` meldet als einzige Fähigkeit `{"tools": {}}`,
+`resources/list` und `prompts/list` sind leer, es gibt keine Benachrichtigungen. Änderungen zwischen
+zwei Abfragen liefert `control_state` mit `history` + `since`. Für Echtzeit: WebSocket oder Logger-UDP
+([miniserver-dateizugriff.md](miniserver-dateizugriff.md), Abschnitt 4a).
+
+**Sichtbar sind nur Steuerungen** mit den Rechten des angemeldeten Benutzers, im Prüfprojekt 280 in
+28 Räumen. Nicht sichtbar: Klemmen ohne Visu, Verdrahtung und Logik. Plugin-Geräte wie Fronius und
+Wattpilot liefern bei der Suche nach ihrem Namen keinen Treffer. Ob ihre Werte über einen
+verknüpften Baustein erscheinen, ist `[OFFEN]`.
+
+### Älterer Stand: Plugin 1.0.0
+
 Offiziell dokumentiert ist nur die Zweiteilung: **Read** (Struktur, Zustand, Historie, Statistik —
 ändert nichts) und **Write** (Befehle). Das Plugin setzt dafür MCP-Annotationen (`readOnlyHint`,
 `destructiveHint`, `idempotentHint`, `openWorldHint`); viele Clients lassen sich darüber auf reinen
@@ -174,6 +209,22 @@ als Orientierung brauchbar, für Verlass darauf zu dünn:
 | `system_status` · `system_messages` · `system_time` | Read | Systemzustand, Meldungen, Zeit |
 
 ---
+
+## 5a. Direktzugriff ohne MCP-Client: `scripts/mcp_direct.py`
+
+`[PROJEKT-BELEGT]` Verwendet am 02.11.2026 (Login und Abfragen mit der Vorfassung des Skripts).
+
+```
+py -3 scripts/mcp_direct.py <ip> login
+py -3 scripts/mcp_direct.py <ip> tools
+py -3 scripts/mcp_direct.py <ip> call control_find "{\"query\":\"Licht\"}"
+```
+
+Wozu: Eine laufende Claude-Code-Sitzung übernimmt per `claude mcp add` ergänzte Server nicht sofort,
+und in der Desktop-App gibt es kein `/mcp` für den Login. Außerdem löst hinter einer Fritz!Box der
+dyndns-Name oft nicht auf (Falle 10). Das Skript verbindet per TLS zur IP, prüft das Zertifikat gegen
+den Namen und öffnet für den Login einen Loopback-Proxy. **Das Passwort tippt der Benutzer im Browser.**
+Client, Token und Sitzung liegen unter `%LOCALAPPDATA%\lxmcp\<ip>\`.
 
 ## 6. Reverse-Proxy oder eigene Domain
 
@@ -377,7 +428,21 @@ Admin. Entzug jederzeit durch Deaktivieren des Benutzers oder Entfernen der Verb
 **9. Nur eine Instanz je Miniserver.**
 `maxCountPerMiniserver: 1` — mehrere MCP-Server-Objekte im Projekt sind nicht vorgesehen.
 
-**10. Zustandsdaten sind direkt nach dem Start unvollständig.**
+**10. Der dyndns-Name löst hinter einer Fritz!Box oft nicht auf.**
+`[PROJEKT-BELEGT]` Der Name zeigt auf eine private IP, der lokale DNS antwortet deshalb leer; `1.1.1.1`
+löst ihn korrekt auf. `curl https://<ip>/mcp` antwortet trotzdem mit `401`, der Server wirkt also
+gesund, während Client und Browser mit dem Namen scheitern. Die Fritz!Box-Ausnahme für den
+DNS-Rebind-Schutz (`loxonecloud.com`) ist die naheliegende Dauerlösung, aber noch nicht getestet.
+Ohne Router-Änderung: `curl --resolve <name>:443:<ip>` oder `scripts/mcp_direct.py`.
+Das Zertifikat ist auf den Namen ausgestellt, direkt auf die IP schlägt die Prüfung fehl.
+
+**11. `invalid_target` beim Login durch einen umschreibenden Proxy.**
+`[PROJEKT-BELEGT]` Die Anmeldeseite trägt die `resource`-URL mit. Ersetzt ein Proxy den Hostnamen
+pauschal im HTML, verfälscht er auch diesen Wert, und der Server lehnt mit `invalid_target` ab. Das sieht
+nach falschem Login aus, Benutzer und Passwort sind aber nicht die Ursache. Nur `action`, `href`, `src`
+und `Location` umbiegen.
+
+**12. Zustandsdaten sind direkt nach dem Start unvollständig.**
 Das Plugin füllt seine Zustandstabellen aus Änderungen und beginnt erst mit der ersten
 Zustandsabfrage zu sammeln. Direkt nach dem Verbinden können Werte fehlen, bis sich physisch etwas
 ändert.

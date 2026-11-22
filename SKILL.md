@@ -1,6 +1,6 @@
 ---
 name: loxone-config
-description: Use when working with Loxone Config projects or .Loxone files - reading, analysing or script-editing project XML, wiring function blocks (Intelligente Raumregelung, Automatikbeschattung, Präsenz, Lichtsteuerung, WC Lüftungssteuerung, Zentralbausteine), retrofitting KNX/DALI installations, running or evaluating the Auto-Konfiguration, integrating third-party devices (Loxone Library templates and .LxAddon files, Modbus/virtual output/IR/RS232 templates, Sonos and other audio, LoxBerry or Home Assistant bridges), or answering what a Loxone block can do.
+description: Use when working with Loxone Config projects or .Loxone files - reading, analysing or script-editing project XML, wiring function blocks (Intelligente Raumregelung, Automatikbeschattung, Präsenz, Lichtsteuerung, WC Lüftungssteuerung, Zentralbausteine), retrofitting KNX/DALI installations, running or evaluating the Auto-Konfiguration, integrating third-party devices (Loxone Library templates and .LxAddon files, Modbus/virtual output/IR/RS232 templates, Sonos and other audio, LoxBerry or Home Assistant bridges), migrating Gen-1 blocks (Lichtsteuerung, Raumregelung) to current ones, driving the Loxone Config 17.3 Config MCP (edit, align and simulate the open project), or answering what a Loxone block can do.
 ---
 
 # Loxone Config
@@ -8,7 +8,7 @@ description: Use when working with Loxone Config projects or .Loxone files - rea
 Verifiziertes Wissen über Loxone-Config-Projekte: Dateiformat, Bausteine, Konnektoren und die
 Fallen, die man sonst durch Ausprobieren lernt. **Nicht raten — hier nachsehen.**
 
-Stand: Loxone Config 17.1.7.27 · ControlList Version 273 · Objektversion `V="175"`
+Stand: Loxone Config 17.1.7.27 · ControlList Version 273 · Objektversion `V="175"` · Config MCP und Lichtsteuerungs-Migration verifiziert an 17.3.11.12 (ControlList 283, `V="179"`), 22.11.2026
 
 Zusätzlicher Projektabgleich vom 09.09.2026: ConfigVersion `17020828`, ControlList 274.
 [Projektbefunde und Strukturinventar](references/demo-project-audit.md) ergänzen den
@@ -28,7 +28,7 @@ Zusätzlicher Projektabgleich vom 09.09.2026: ConfigVersion `17020828`, ControlL
 - Ein Fremdgerät (Wechselrichter, Zähler, Wallbox, Wärmepumpe, TV …) einbinden:
   **zuerst in der Loxone Library nachsehen**, statt Modbus-Register abzutippen
 
-## Die elf Fallen
+## Die dreizehn Fallen
 
 Jede davon hat schon einmal Schaden angerichtet oder Arbeit vernichtet.
 
@@ -133,6 +133,24 @@ Projektbestand in [xml-bearbeitung.md](references/xml-bearbeitung.md), Abschnitt
 **Nebenbefund zum Parser:** `<Key>…</Key>` (Air-Pairing-Key einer Extension) trägt **Elementtext**
 statt Attributen. Ein Scanner, der nur Attribute kennt, bricht dort ab.
 
+**12. Eine geöffnete Datei und intakte Verbindungen beweisen keine Blattpassung.**
+Vor dem Umordnen prüfen, ob das ganze weiße Blatt mit rechter/unterer Kante sichtbar ist.
+Bausteine und Referenzen im grauen Bereich sind Überstände; Herauszoomen behebt sie nicht.
+Danach die vollständigen Rechtecke `Px/Py/Px2/Py2` aller Seitenobjekte direkt aus der Datei
+gegen belegte Blattinnenmaße und gegen Überlappungen prüfen. Abschnittsüberschriften,
+Ränder und Fußzeile berücksichtigen; native Bausteingrößen erhalten. Neue Ausgabedatei
+verwenden, falls der alte Stand noch in Config offen ist. Details, Projektbeleg und
+wiederholbarer Node-Prüfer: [Seitenlayout und Blattgrenzen](references/seitenlayout.md).
+Rechnerische Prüfung und aktuelle native Sichtprüfung ausdrücklich getrennt benennen.
+
+**13. Seit Config 17.3 nicht mehr XML patchen, wenn der Config MCP verfügbar ist.**
+Der Config MCP (Titelleiste → Config MCP) bearbeitet das **in Config geöffnete** Projekt: Bausteine anlegen,
+verdrahten, parametrieren, Seiten ausrichten, speichern, simulieren — jede Änderung ein Undo-Schritt, kein
+NumO-/Vorlagen-/Apostroph-Risiko. Vorher prüfen, **welche Datei offen ist**, und per `save_project({path})`
+auf eine Arbeitskopie umlenken. Eine Strukturprüfung reicht nicht: in der Simulation fiel auf, dass T5-Eingänge
+der neuen Lichtsteuerung Digitalsignale ignorieren und Analogeingänge mehrere Quellen UND-verknüpfen.
+[config-mcp.md](references/config-mcp.md), Client `scripts/config_mcp.py`.
+
 ## Referenzen
 
 ### Grundlagen
@@ -140,6 +158,8 @@ statt Attributen. Ein Scanner, der nur Attribute kennt, bricht dort ab.
 | Datei | Inhalt |
 |---|---|
 | [references/demo-project-audit.md](references/demo-project-audit.md) | **Projektbeleg vom 09.09.2026:** 2.279 Objekte, 223 XML-Typen, 31 zusätzliche Seiten-Bausteintypen gegenüber den XML-Vorlagen; strukturelles JSON-Inventar, konkrete MCP-Plugin-Struktur, Versionsgrenzen |
+| [references/config-mcp.md](references/config-mcp.md) | **Config MCP (ab 17.3, lokal in Config):** Projekt bearbeiten, ausrichten, simulieren; Abgrenzung zum Miniserver-MCP; Client `scripts/config_mcp.py`; in der Simulation nachgewiesene Fallen (Analog-Mehrfachquellen = UND, T5 nur Code 4) |
+| [references/migrationserkenntnisse.md](references/migrationserkenntnisse.md) | **Generationenmigration:** Lichtsteuerung Gen 1 → LightController2 (Parameter, Dimmwert-Kodierung, Stimmungs-IDs, Verhaltensunterschiede), native freie Kalendertemperaturen samt Encoding, alte AQ2-Kennlinie, Resetpegel, Dezimalkomma und Eco-Untergrenze |
 | [references/xml-bearbeitung.md](references/xml-bearbeitung.md) | Dateiformat, verlustfreies Schreiben, PowerShell-Rezept, Fallstricke |
 | [references/bausteine.md](references/bausteine.md) | Vorlagen-Handhabung, die sieben verifizierten Konnektor-Zuordnungen |
 | [references/xml-doku-mapping.md](references/xml-doku-mapping.md) | **Interner XML-Konnektorname ↔ Doku-Kürzel** für alle 29 Vorlagentypen, plus die drei Lücken-Listen |
@@ -236,6 +256,14 @@ Maschinenlesbare Bausteindoku (alle Bausteine, offiziell): `C:\ProgramData\Loxon
 | Gatterlogik, Ablaufsteuerung oder PicoC? | *Bedingungen* → Gatter · *Abläufe* → Ablaufsteuerung · *Fremdformate* → PicoC. [programmier-bausteine.md](references/programmier-bausteine.md) |
 | PicoC: welcher Index ist Eingang I1? | `getinput(0)`. 0-basiert, Text- und Analogkanäle getrennt |
 | Sequenztext / Programmcode im XML | `SequenceController` → `<SEQ CFG="…">` · `Code16` → Attribut `Code` |
+| Bausteine über den MCP-Server anlegen? | **Miniserver-MCP: geht nicht** (liest und sendet Befehle, live geprüft, Plugin 1.0.8) — [mcp-server.md](references/mcp-server.md) 5. **Config MCP (17.3, lokal in Config): ja** — [config-mcp.md](references/config-mcp.md) |
+| Projekt ohne Miniserver simulieren | Config MCP: `cfg.sim_step` / `sim_set_time` / `sim_set_value`, Config muss laufen; keine Kommandozeilen-Simulation — [config-mcp.md](references/config-mcp.md) |
+| „Bausteine ausrichten“ (F11) per Skript | `cfg.arrange_page({page_uuid})` über den Config MCP; Notizen (`Text`) bewegt es nicht |
+| Gen-1-Lichtsteuerung auf neue umstellen | kein Konverter in Config → je Baustein per Config MCP neu anlegen, umverdrahten, Stimmungen schreiben; Dimmwerte `0x10000000+%` übersetzen — [migrationserkenntnisse.md](references/migrationserkenntnisse.md) |
+| Welche Bausteine hält Config selbst für konvertierbar? | `cfg.validate_project()` Regel `CONVERTABLE_OBJ` („n Objekt(e) konvertierbar“; im geprüften Kundenprojekt die 19 `IRoomcontrol`) |
+| Eingänge über MCP abonnieren? | **Geht nicht, nur pollen** (`control_state` mit `history` + `since`). Echtzeit: Logger-UDP oder WebSocket |
+| MCP antwortet 401, aber der Client verbindet nicht | Fritz!Box-Rebind-Schutz blockt den dyndns-Namen → `py -3 scripts/mcp_direct.py <ip> login` — [mcp-server.md](references/mcp-server.md) 5a, Falle 10 |
+| Fronius / Wattpilot im Projekt-XML | `C Type="Plugin" gid="Fronius"` mit `GenDev` je Gerät, Werte über `ApiActor` (API Connector Grid/PV/Battery bzw. Wallbox). **Nicht** `Type="Fronius"`: das ist der alte Energiemonitor |
 | Klemme **ohne Visu** in Echtzeit nach außen (HA, MQTT-Bridge …) | Logger-Objekt `Address="/dev/udp/<ip>/<port>"` **plus** je Klemme ein `OutputRefLM` auf einer Seite, `AI` vom `Q`/`AQ` der Klemme. **`LoggerMailer` direkt an der Klemme tut nichts.** 12–20 ms Latenz, Broadcast erlaubt — `py -3 scripts/ha_udp_logger.py`, [miniserver-dateizugriff.md](references/miniserver-dateizugriff.md) 4a |
 | Programm ohne Config in den Miniserver | FTP `STOR /prog/sps_new.zip`, dann `GET /jdev/sps/restart` — genau Configs Weg. Vorher `sps_*.zip` aus `/prog` ziehen, `NumO` und `Date`/`DateS` setzen — [miniserver-dateizugriff.md](references/miniserver-dateizugriff.md) 5 |
 | Gateway/Client: welche Datei gehört zu welchem Miniserver? | `sps0.LoxCC` = Gateway, `spsN.LoxCC` = Client mit `SLAVE Type="N"` bzw. `GatewayClient ProgType="N"`; `Program Ref="<LoxLIVE-U>"`; `sps.Loxone` = Gesamtprojekt, das Config lädt — [gateway-client.md](references/gateway-client.md) |
@@ -262,7 +290,8 @@ nicht „Impuls bei") · `DayTimer` ist die **Schaltuhr** · `SmokeAlarm` ist di
 **Brand- und Wassermeldezentrale** · `WindowsMonitor` ist die **Fenster- und Türüberwachung**
 (der Baustein „Fenster" hat gar keine Vorlage) · `AutoJalousie` ist die **Automatikbeschattung**
 (die einfache „Jalousie" hat keine Vorlage) · **`Code16` ist der Baustein „Programm"** (PicoC),
-`SequenceController` die **Ablaufsteuerung**. Ebenso trügerisch: `AutoJalousie.EnAutoShade`
+`SequenceController` die **Ablaufsteuerung** · `EFM` ist der **Energieflussmonitor**, `WBEM` der
+**Wallbox Manager** (eine Suche nach „Energy" oder „Flow" findet beide nicht). Ebenso trügerisch: `AutoJalousie.EnAutoShade`
 trägt das Doku-Kürzel **`DisSp`** — der XML-Name sagt „enable", die Doku „disable".
 Und `Code` ist **doppelt vergeben**: am `<C Type="Document">` ist es die **Postleitzahl**,
 am `Code16` der Programmtext.
